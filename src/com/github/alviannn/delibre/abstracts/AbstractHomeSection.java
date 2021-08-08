@@ -1,5 +1,9 @@
 package com.github.alviannn.delibre.abstracts;
 
+import com.github.alviannn.delibre.models.Book;
+import com.github.alviannn.delibre.models.Borrow;
+import com.github.alviannn.delibre.models.User;
+
 import javax.swing.*;
 
 public abstract class AbstractHomeSection {
@@ -10,7 +14,7 @@ public abstract class AbstractHomeSection {
 
     public JComboBox<String> categoryField, sortTypeField;
     public JTextField searchField;
-    public JButton searchBtn;
+    public JButton clearBtn, searchBtn;
 
     public AbstractHomeSection(AbstractHomeView view, JButton mainBtn, int section) {
         this.view = view;
@@ -18,12 +22,27 @@ public abstract class AbstractHomeSection {
         this.section = section;
     }
 
-    protected void makeFilters(String[] categoryValues) {
+    protected void makeFilters() {
         JPanel filter = view.filterPanel;
 
         JLabel categoryLabel = new JLabel("Category"),
                 sortTypeLabel = new JLabel("Sort Type"),
                 searchLabel = new JLabel("Search");
+
+        String[] categoryValues;
+        switch (section) {
+            case AbstractHomeView.BOOK:
+                categoryValues = Book.Field.getFieldNames();
+                break;
+            case AbstractHomeView.USER:
+                categoryValues = User.Field.getFieldNames();
+                break;
+            case AbstractHomeView.BORROWED:
+                categoryValues = Borrow.Field.getFieldNames();
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + section);
+        }
 
         categoryField = new JComboBox<>(categoryValues);
         sortTypeField = new JComboBox<>(new String[]{"ASCENDING", "DESCENDING"});
@@ -75,7 +94,20 @@ public abstract class AbstractHomeSection {
      * <p>
      * Estimated target to be changed: table, details, and filter section
      */
-    public abstract void applyView();
+    public void applyView() {
+        view.currentSection = section;
+
+        // clear the panels
+        view.detailsPanel.removeAll();
+        view.filterPanel.removeAll();
+
+        // re-build the panels
+        this.makeDetails();
+        this.makeFilters();
+
+        // disable button
+        mainBtn.setEnabled(false);
+    }
 
     /**
      * Cleans up the changed data from this section

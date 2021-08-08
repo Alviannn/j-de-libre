@@ -8,7 +8,7 @@ import javax.swing.*;
 
 public class AdminBorrowedSection extends AbstractHomeSection {
 
-    public JButton deleteBtn, clearBtn;
+    public JButton deleteBtn;
     public JTextField idField, userIdField, bookIdField,
             usernameField, bookTitleField,
             borrowDateField, dueDateField;
@@ -103,15 +103,7 @@ public class AdminBorrowedSection extends AbstractHomeSection {
 
     @Override
     public void applyView() {
-        view.currentSection = section;
-
-        // clear the panels
-        view.detailsPanel.removeAll();
-        view.filterPanel.removeAll();
-
-        // re-build the panels
-        this.makeDetails();
-        this.makeFilters(new String[0]);
+        super.applyView();
 
         // disable filters
         categoryField.setEnabled(false);
@@ -119,9 +111,6 @@ public class AdminBorrowedSection extends AbstractHomeSection {
         searchField.setEnabled(false);
         searchBtn.setEnabled(false);
         sortTypeField.removeAllItems();
-
-        // disable button
-        mainBtn.setEnabled(false);
     }
 
     @Override

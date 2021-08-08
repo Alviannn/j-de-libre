@@ -1,7 +1,6 @@
 package com.github.alviannn.delibre.views.admin;
 
 import com.github.alviannn.delibre.abstracts.AbstractHomeSection;
-import com.github.alviannn.delibre.models.User;
 import com.github.alviannn.delibre.abstracts.AbstractHomeView;
 import com.github.alviannn.delibre.views.AdminHomeView;
 
@@ -9,7 +8,7 @@ import javax.swing.*;
 
 public class AdminUserSection extends AbstractHomeSection {
 
-    public JButton deleteBtn, clearBtn;
+    public JButton deleteBtn;
     public JTextField idField, nameField, registeredField;
 
     public AdminUserSection(AdminHomeView view) {
@@ -62,22 +61,6 @@ public class AdminUserSection extends AbstractHomeSection {
 
         details.add(deleteBtn);
         details.add(clearBtn);
-    }
-
-    @Override
-    public void applyView() {
-        view.currentSection = section;
-
-        // clear the panels
-        view.detailsPanel.removeAll();
-        view.filterPanel.removeAll();
-
-        // re-build the panels
-        this.makeDetails();
-        this.makeFilters(User.Field.getFieldNames());
-
-        // disable button
-        mainBtn.setEnabled(false);
     }
 
     @Override

@@ -51,11 +51,11 @@ public class Borrow {
         USER_ID("User ID"),
         BOOK_ID("Book ID"),
 
-        USERNAME("Username"),
-        BOOK_TITLE("Book Title"),
-
         BORROW_DATE("Borrow Date"),
-        DUE_DATE("Due Date");
+        DUE_DATE("Due Date"),
+
+        USERNAME("Username"),
+        BOOK_TITLE("Book Title");
 
         private final String name;
 
