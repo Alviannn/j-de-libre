@@ -49,7 +49,6 @@ public class AdminBorrowedSection extends AbstractHomeSection {
                 dueDateLabel = new JLabel("Due Date");
 
         deleteBtn = new JButton("Delete");
-        clearBtn = new JButton("Clear");
 
         int formVertGap = 35;
         int formHorzGap = 350;

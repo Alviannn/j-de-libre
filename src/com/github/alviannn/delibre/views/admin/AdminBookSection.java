@@ -34,7 +34,6 @@ public class AdminBookSection extends AbstractHomeSection {
 
         saveBtn = new JButton("Save");
         deleteBtn = new JButton("Delete");
-        clearBtn = new JButton("Clear");
 
         int formCenter = 40;
         int formGap = 35;

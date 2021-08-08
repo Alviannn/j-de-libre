@@ -31,7 +31,6 @@ public class AdminUserSection extends AbstractHomeSection {
                 registeredLabel = new JLabel("Registered Date");
 
         deleteBtn = new JButton("Delete");
-        clearBtn = new JButton("Clear");
 
         int formCenter = (695 - 300) / 2;
         int formGap = 35;

@@ -14,7 +14,7 @@ public abstract class AbstractHomeSection {
 
     public JComboBox<String> categoryField, sortTypeField;
     public JTextField searchField;
-    public JButton clearBtn, searchBtn;
+    public JButton clearBtn = new JButton("Clear"), searchBtn;
 
     public AbstractHomeSection(AbstractHomeView view, JButton mainBtn, int section) {
         this.view = view;

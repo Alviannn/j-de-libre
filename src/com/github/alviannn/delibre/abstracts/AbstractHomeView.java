@@ -91,12 +91,9 @@ public abstract class AbstractHomeView extends AbstractView {
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
-
-            @Override
-            public boolean isColumnSelected(int column) {
-                return false;
-            }
         };
+
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane scrollPane = new JScrollPane(table);
 
         detailsPanel = new JPanel(null);
