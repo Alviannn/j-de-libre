@@ -13,6 +13,9 @@ public abstract class AbstractController {
         this.main = main;
     }
 
+    /**
+     * Shows the VIEW to the user
+     */
     public abstract void showView();
 
 }
