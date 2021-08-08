@@ -182,7 +182,6 @@ public class HomeController extends AbstractController {
     }
 
     private void refreshTable(AbstractHomeView view) {
-        // todo: check if view is admin or user
         DefaultTableModel model = null;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -231,8 +230,7 @@ public class HomeController extends AbstractController {
         }
 
         assert model != null;
-        JTable table = view.table;
-        table.setModel(model);
+        view.table.setModel(model);
     }
 
     private void changeAdminSection(AdminHomeView view, int type) {
