@@ -3,14 +3,15 @@ package com.github.alviannn.delibre.controllers;
 import com.github.alviannn.delibre.Main;
 import com.github.alviannn.delibre.abstracts.AbstractController;
 import com.github.alviannn.delibre.abstracts.AbstractHomeSection;
+import com.github.alviannn.delibre.abstracts.AbstractHomeView;
 import com.github.alviannn.delibre.models.Book;
 import com.github.alviannn.delibre.models.Borrow;
 import com.github.alviannn.delibre.models.User;
 import com.github.alviannn.delibre.sql.Database;
 import com.github.alviannn.delibre.sql.Results;
-import com.github.alviannn.delibre.abstracts.AbstractHomeView;
 import com.github.alviannn.delibre.views.AdminHomeView;
 import com.github.alviannn.delibre.views.admin.AdminBookSection;
+import com.github.alviannn.delibre.views.admin.AdminBorrowedSection;
 import com.github.alviannn.delibre.views.admin.AdminUserSection;
 import com.sun.istack.internal.Nullable;
 
@@ -75,6 +76,15 @@ public class HomeController extends AbstractController {
                         break;
                     }
                     case AbstractHomeView.BORROWED: {
+                        AdminBorrowedSection borrowed = view.borrowedSection;
+
+                        borrowed.idField.setText((String) table.getValueAt(row, 0));
+                        borrowed.userIdField.setText((String) table.getValueAt(row, 1));
+                        borrowed.bookIdField.setText((String) table.getValueAt(row, 2));
+                        borrowed.borrowDateField.setText((String) table.getValueAt(row, 3));
+                        borrowed.dueDateField.setText((String) table.getValueAt(row, 4));
+                        borrowed.usernameField.setText((String) table.getValueAt(row, 5));
+                        borrowed.bookTitleField.setText((String) table.getValueAt(row, 6));
                         break;
                     }
                     default:
@@ -84,6 +94,14 @@ public class HomeController extends AbstractController {
         });
 
         this.refreshTable(view);
+
+        AbstractHomeSection[] sections = {view.bookSection, view.userSection, view.borrowedSection};
+        for (AbstractHomeSection tmp : sections) {
+            tmp.clearBtn.addActionListener(e -> {
+                tmp.clearDetailsFields();
+                table.clearSelection();
+            });
+        }
     }
 
     public void insertBook(String title, String author, int year, int pageCount) {
@@ -134,6 +152,35 @@ public class HomeController extends AbstractController {
         return books;
     }
 
+    public List<Borrow> getAllBorrowed() {
+        List<Borrow> borrows = new ArrayList<>();
+
+        try (Results results = db.results(
+                "SELECT borrows.*, users.name AS username, books.title AS title FROM borrows "
+                + "JOIN users ON borrows.userId = users.id "
+                + "JOIN books ON borrows.bookId = books.id;")) {
+
+            ResultSet rs = results.getResultSet();
+            while (rs.next()) {
+                Borrow borrow = new Borrow(
+                        rs.getInt("id"),
+                        rs.getInt("userId"),
+                        rs.getInt("bookId"),
+                        rs.getDate("borrowDate"),
+                        rs.getDate("dueDate"),
+                        rs.getString("username"),
+                        rs.getString("title")
+                );
+
+                borrows.add(borrow);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return borrows;
+    }
+
     private void refreshTable(AbstractHomeView view) {
         // todo: check if view is admin or user
         DefaultTableModel model = null;
@@ -166,6 +213,19 @@ public class HomeController extends AbstractController {
             }
             case AbstractHomeView.BORROWED: {
                 model = new DefaultTableModel(Borrow.Field.getFieldNames(), 0);
+                List<Borrow> borrows = this.getAllBorrowed();
+
+                for (Borrow borrow : borrows) {
+                    model.addRow(new Object[]{
+                            borrow.getId() + "",
+                            borrow.getUserId() + "",
+                            borrow.getBookId() + "",
+                            dateFormat.format(borrow.getBorrowDate()),
+                            dateFormat.format(borrow.getDueDate()),
+                            borrow.getUsername(),
+                            borrow.getBookTitle()
+                    });
+                }
                 break;
             }
         }
