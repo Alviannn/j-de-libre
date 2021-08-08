@@ -14,7 +14,8 @@ public abstract class AbstractController {
     }
 
     /**
-     * Shows the VIEW to the user
+     * Shows the view to the user
+     * and also add listeners to components within this view
      */
     public abstract void showView();
 

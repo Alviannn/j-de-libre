@@ -33,13 +33,13 @@ public abstract class AbstractHomeView extends AbstractView {
     }
 
     /**
-     * Gets the currently applied section to the home view
+     * Gets the currently applied section object from the home view
      */
     @NotNull
     public abstract AbstractHomeSection getAppliedSection();
 
     /**
-     * Gets the specified section
+     * Gets the specified section object
      *
      * @param type the specified section type
      */
