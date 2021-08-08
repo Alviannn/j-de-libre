@@ -37,6 +37,8 @@ public class HomeController extends AbstractController {
 
     @Override
     public void showView() {
+        ModelHelper helper = main.getModelHelper();
+
         // todo: check if user an admin or not
         AdminHomeView view = new AdminHomeView();
         view.setVisible(true);
@@ -88,8 +90,6 @@ public class HomeController extends AbstractController {
             }
         });
 
-        this.refreshTable(view);
-
         AbstractHomeSection[] sections = {view.bookSection, view.userSection, view.borrowedSection};
         for (AbstractHomeSection tmp : sections) {
             tmp.clearBtn.addActionListener(e -> {
@@ -97,6 +97,76 @@ public class HomeController extends AbstractController {
                 table.clearSelection();
             });
         }
+
+        view.bookSection.deleteBtn.addActionListener(e -> {
+            AdminBookSection section = view.bookSection;
+
+            String title = "Book Deletion";
+            String idString = section.idField.getText();
+
+            if (idString.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "No data was selected!", title, JOptionPane.ERROR_MESSAGE);
+            } else {
+                int id = Integer.parseInt(idString);
+                helper.removeBook(id);
+
+                JOptionPane.showMessageDialog(null, "Successfully deleted the data!", title, JOptionPane.INFORMATION_MESSAGE);
+            }
+
+            section.clearDetailsFields();
+            table.clearSelection();
+
+            this.refreshTable(view);
+        });
+
+        view.userSection.deleteBtn.addActionListener(e -> {
+            AdminUserSection section = view.userSection;
+
+            String title = "User Deletion";
+            String idString = section.idField.getText();
+
+            if (idString.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "No data was selected!", title, JOptionPane.ERROR_MESSAGE);
+            } else {
+                int id = Integer.parseInt(idString);
+                helper.removeUser(id);
+
+                JOptionPane.showMessageDialog(null, "Successfully deleted the data!", title, JOptionPane.INFORMATION_MESSAGE);
+            }
+
+            section.clearDetailsFields();
+            table.clearSelection();
+
+            this.refreshTable(view);
+        });
+
+        view.borrowedSection.deleteBtn.addActionListener(e -> {
+            AdminBorrowedSection section = view.borrowedSection;
+
+            String title = "Borrowed Book Deletion";
+            String idString = section.idField.getText();
+
+            if (idString.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "No data was selected!", title, JOptionPane.ERROR_MESSAGE);
+            } else {
+                int id = Integer.parseInt(idString);
+                helper.removeUser(id);
+
+                JOptionPane.showMessageDialog(null, "Successfully deleted the data!", title, JOptionPane.INFORMATION_MESSAGE);
+            }
+
+            section.clearDetailsFields();
+            table.clearSelection();
+
+            this.refreshTable(view);
+        });
+
+        view.logoutBtn.addActionListener(e -> {
+            view.dispose();
+            main.getAuth().showView();
+        });
+
+        this.refreshTable(view);
     }
 
     private void refreshTable(AbstractHomeView view) {
