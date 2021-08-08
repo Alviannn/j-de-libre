@@ -2,6 +2,7 @@ package com.github.alviannn.delibre;
 
 import com.github.alviannn.delibre.controllers.AuthController;
 import com.github.alviannn.delibre.controllers.HomeController;
+import com.github.alviannn.delibre.controllers.ModelHelper;
 import com.github.alviannn.delibre.sql.Database;
 
 import java.io.File;
@@ -12,6 +13,7 @@ public class Main {
 
     private final AuthController auth;
     private final HomeController home;
+    private final ModelHelper modelHelper;
 
     public Main() {
         Database db = new Database();
@@ -23,11 +25,11 @@ public class Main {
             e.printStackTrace();
         }
 
-        this.auth = new AuthController(db, this);
-        this.home = new HomeController(db, this);
+        this.modelHelper = new ModelHelper(db);
+        this.auth = new AuthController(this);
+        this.home = new HomeController(this);
 
         auth.showView();
-//        home.showView();
     }
 
     public AuthController getAuth() {
@@ -36,6 +38,10 @@ public class Main {
 
     public HomeController getHome() {
         return home;
+    }
+
+    public ModelHelper getModelHelper() {
+        return modelHelper;
     }
 
     public static void main(String[] args) {

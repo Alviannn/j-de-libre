@@ -7,29 +7,24 @@ import com.github.alviannn.delibre.abstracts.AbstractHomeView;
 import com.github.alviannn.delibre.models.Book;
 import com.github.alviannn.delibre.models.Borrow;
 import com.github.alviannn.delibre.models.User;
-import com.github.alviannn.delibre.sql.Database;
-import com.github.alviannn.delibre.sql.Results;
 import com.github.alviannn.delibre.views.AdminHomeView;
 import com.github.alviannn.delibre.views.admin.AdminBookSection;
 import com.github.alviannn.delibre.views.admin.AdminBorrowedSection;
 import com.github.alviannn.delibre.views.admin.AdminUserSection;
-import com.sun.istack.internal.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 public class HomeController extends AbstractController {
 
     private User currentUser;
 
-    public HomeController(Database db, Main main) {
-        super(db, main);
+    public HomeController(Main main) {
+        super(main);
     }
 
     public void setCurrentUser(User currentUser) {
@@ -104,91 +99,16 @@ public class HomeController extends AbstractController {
         }
     }
 
-    public void insertBook(String title, String author, int year, int pageCount) {
-        try {
-            db.query("INSERT INTO books (title, author, year, pageCount) VALUES (?, ?, ?, ?);",
-                    title, author, year, pageCount);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Nullable
-    public Book findBook(String title) {
-        try (Results res = db.results("SELECT * FROM books WHERE title = ?;", title)) {
-            ResultSet rs = res.getResultSet();
-            if (rs.next()) {
-                return new Book(rs.getInt("id"),
-                        rs.getString("title"),
-                        rs.getString("author"),
-                        rs.getInt("year"),
-                        rs.getInt("pageCount"));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    public List<Book> getAllBooks() {
-        List<Book> books = new ArrayList<>();
-
-        try (Results res = db.results("SELECT * FROM books;")) {
-            ResultSet rs = res.getResultSet();
-            while (rs.next()) {
-                Book book = new Book(rs.getInt("id"),
-                        rs.getString("title"),
-                        rs.getString("author"),
-                        rs.getInt("year"),
-                        rs.getInt("pageCount"));
-
-                books.add(book);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return books;
-    }
-
-    public List<Borrow> getAllBorrowed() {
-        List<Borrow> borrows = new ArrayList<>();
-
-        try (Results results = db.results(
-                "SELECT borrows.*, users.name AS username, books.title AS title FROM borrows "
-                + "JOIN users ON borrows.userId = users.id "
-                + "JOIN books ON borrows.bookId = books.id;")) {
-
-            ResultSet rs = results.getResultSet();
-            while (rs.next()) {
-                Borrow borrow = new Borrow(
-                        rs.getInt("id"),
-                        rs.getInt("userId"),
-                        rs.getInt("bookId"),
-                        rs.getDate("borrowDate"),
-                        rs.getDate("dueDate"),
-                        rs.getString("username"),
-                        rs.getString("title")
-                );
-
-                borrows.add(borrow);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return borrows;
-    }
-
     private void refreshTable(AbstractHomeView view) {
         DefaultTableModel model = null;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
+        ModelHelper helper = main.getModelHelper();
+
         switch (view.currentSection) {
             case AbstractHomeView.BOOK: {
                 model = new DefaultTableModel(Book.Field.getFieldNames(), 0);
-                List<Book> books = this.getAllBooks();
+                List<Book> books = helper.getAllBooks();
 
                 for (Book book : books) {
                     model.addRow(new Object[]{
@@ -200,7 +120,7 @@ public class HomeController extends AbstractController {
             }
             case AbstractHomeView.USER: {
                 model = new DefaultTableModel(User.Field.getFieldNames(), 0);
-                List<User> users = main.getAuth().getAllUsers();
+                List<User> users = helper.getAllUsers();
 
                 for (User user : users) {
                     model.addRow(new Object[]{
@@ -212,7 +132,7 @@ public class HomeController extends AbstractController {
             }
             case AbstractHomeView.BORROWED: {
                 model = new DefaultTableModel(Borrow.Field.getFieldNames(), 0);
-                List<Borrow> borrows = this.getAllBorrowed();
+                List<Borrow> borrows = helper.getAllBorrowed();
 
                 for (Borrow borrow : borrows) {
                     model.addRow(new Object[]{
