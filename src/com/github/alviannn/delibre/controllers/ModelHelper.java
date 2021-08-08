@@ -7,10 +7,12 @@ import com.github.alviannn.delibre.sql.Database;
 import com.github.alviannn.delibre.sql.Results;
 import com.sun.istack.internal.Nullable;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class ModelHelper {
 
@@ -48,6 +50,8 @@ public class ModelHelper {
 
         return null;
     }
+
+    // ---------------------------------------------------------------------------------------------- //
 
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
@@ -121,9 +125,8 @@ public class ModelHelper {
         return borrows;
     }
 
-    /**
-     * Executes the user registration query
-     */
+    // ---------------------------------------------------------------------------------------------- //
+
     public void registerUser(String name, String password) {
         try {
             db.query("INSERT INTO users (name, password, admin) VALUES (?, ?, ?);", name, password, false);
@@ -132,9 +135,6 @@ public class ModelHelper {
         }
     }
 
-    /**
-     * Executes the book insertion query
-     */
     public void insertBook(String title, String author, int year, int pageCount) {
         try {
             db.query("INSERT INTO books (title, author, year, pageCount) VALUES (?, ?, ?, ?);",
@@ -144,5 +144,58 @@ public class ModelHelper {
         }
     }
 
+    public void borrowBook(User user, Book book) {
+        long millis = System.currentTimeMillis();
+
+        Date curDate = new Date(millis);
+        Date dueDate = new Date(millis + TimeUnit.DAYS.toMillis(7L));
+
+        try {
+            db.query("INSERT INTO borrows (userId, bookId, borrowDate, dueDate) VALUES (?, ?, ?, ?);",
+                    user.getId(), book.getId(), curDate, dueDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // ---------------------------------------------------------------------------------------------- //
+
+    public void removeUser(int id) {
+        // deletes every reference from `borrows` table
+        try {
+            db.query("DELETE FROM borrows WHERE userId = ?;", id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            db.query("DELETE FROM users WHERE id = ?;", id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removeBook(int id) {
+        // deletes every reference from `borrows` table
+        try {
+            db.query("DELETE FROM borrows WHERE bookId = ?;", id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            db.query("DELETE FROM books WHERE id = ?;", id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removeBorrowedBook(int id) {
+        try {
+            db.query("DELETE FROM borrowed WHERE id = ?;", id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }
