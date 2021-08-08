@@ -6,13 +6,16 @@ public class Borrow {
 
     private final int id, userId, bookId;
     private final Date borrowDate, dueDate;
+    private final String username, bookTitle;
 
-    public Borrow(int id, int userId, int bookId, Date borrowDate, Date dueDate) {
+    public Borrow(int id, int userId, int bookId, Date borrowDate, Date dueDate, String username, String bookTitle) {
         this.id = id;
         this.userId = userId;
         this.bookId = bookId;
         this.borrowDate = borrowDate;
         this.dueDate = dueDate;
+        this.username = username;
+        this.bookTitle = bookTitle;
     }
 
     public int getId() {
@@ -33,6 +36,14 @@ public class Borrow {
 
     public Date getDueDate() {
         return dueDate;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getBookTitle() {
+        return bookTitle;
     }
 
     public enum Field {

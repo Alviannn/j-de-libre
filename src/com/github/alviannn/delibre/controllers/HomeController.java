@@ -134,7 +134,8 @@ public class HomeController extends AbstractController {
         return books;
     }
 
-    private void refreshTable(AdminHomeView view) {
+    private void refreshTable(AbstractHomeView view) {
+        // todo: check if view is admin or user
         DefaultTableModel model = null;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
