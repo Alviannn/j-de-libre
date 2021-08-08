@@ -15,11 +15,6 @@ public class AdminBorrowedSection extends AbstractHomeSection {
 
     public AdminBorrowedSection(AdminHomeView view) {
         super(view, view.borrowedBtn, AbstractHomeView.BORROWED);
-    }
-
-    @Override
-    protected void makeDetails() {
-        JPanel details = view.detailsPanel;
 
         idField = new JTextField();
         idField.setEditable(false);
@@ -38,6 +33,13 @@ public class AdminBorrowedSection extends AbstractHomeSection {
         dueDateField = new JTextField();
         dueDateField.setEditable(false);
 
+        deleteBtn = new JButton("Delete");
+    }
+
+    @Override
+    protected void makeDetails() {
+        JPanel details = view.detailsPanel;
+
         JLabel idLabel = new JLabel("ID"),
                 userIdLabel = new JLabel("User ID"),
                 bookIdLabel = new JLabel("Book ID"),
@@ -47,8 +49,6 @@ public class AdminBorrowedSection extends AbstractHomeSection {
 
                 borrowDateLabel = new JLabel("Borrow Date"),
                 dueDateLabel = new JLabel("Due Date");
-
-        deleteBtn = new JButton("Delete");
 
         int formVertGap = 35;
         int formHorzGap = 350;

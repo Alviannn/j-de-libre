@@ -13,11 +13,6 @@ public class AdminUserSection extends AbstractHomeSection {
 
     public AdminUserSection(AdminHomeView view) {
         super(view, view.usersBtn, AbstractHomeView.USER);
-    }
-
-    @Override
-    protected void makeDetails() {
-        JPanel details = view.detailsPanel;
 
         idField = new JTextField();
         idField.setEditable(false);
@@ -26,11 +21,16 @@ public class AdminUserSection extends AbstractHomeSection {
         registeredField = new JTextField();
         registeredField.setEditable(false);
 
+        deleteBtn = new JButton("Delete");
+    }
+
+    @Override
+    protected void makeDetails() {
+        JPanel details = view.detailsPanel;
+
         JLabel idLabel = new JLabel("ID"),
                 nameLabel = new JLabel("Username"),
                 registeredLabel = new JLabel("Registered Date");
-
-        deleteBtn = new JButton("Delete");
 
         int formCenter = (695 - 300) / 2;
         int formGap = 35;

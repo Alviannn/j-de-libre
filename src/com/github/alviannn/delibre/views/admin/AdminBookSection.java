@@ -13,11 +13,6 @@ public class AdminBookSection extends AbstractHomeSection {
 
     public AdminBookSection(AdminHomeView view) {
         super(view, view.booksBtn, AbstractHomeView.BOOK);
-    }
-
-    @Override
-    protected void makeDetails() {
-        JPanel details = view.detailsPanel;
 
         idField = new JTextField();
         idField.setEditable(false);
@@ -26,14 +21,19 @@ public class AdminBookSection extends AbstractHomeSection {
         yearField = new JTextField();
         pageField = new JTextField();
 
+        saveBtn = new JButton("Save");
+        deleteBtn = new JButton("Delete");
+    }
+
+    @Override
+    protected void makeDetails() {
+        JPanel details = view.detailsPanel;
+
         JLabel idLabel = new JLabel("ID"),
                 titleLabel = new JLabel("Title"),
                 authorLabel = new JLabel("Author"),
                 yearLabel = new JLabel("Year"),
                 pageLabel = new JLabel("Page");
-
-        saveBtn = new JButton("Save");
-        deleteBtn = new JButton("Delete");
 
         int formCenter = 40;
         int formGap = 35;
