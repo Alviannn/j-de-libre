@@ -185,7 +185,7 @@ public class HomeController extends AbstractController {
             }
 
             try {
-                db.query("UPDATE SET title = ?, author = ?, year = ?, pageCount = ? WHERE id = ?;",
+                db.query("UPDATE books SET title = ?, author = ?, year = ?, pageCount = ? WHERE id = ?;",
                         section.titleField.getText(), section.authorField.getText(),
                         yearString, pageString,
                         section.idField.getText());
@@ -195,6 +195,8 @@ public class HomeController extends AbstractController {
 
             section.clearDetailsFields();
             table.clearSelection();
+
+            this.refreshTable(view);
         });
 
         view.logoutBtn.addActionListener(e -> {
