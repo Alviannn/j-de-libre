@@ -26,40 +26,6 @@ public abstract class AbstractView extends JFrame {
     protected abstract void buildFrame();
 
     /**
-     * Wraps a component with an empty border (in order to create a margin effect like in HTML/CSS)
-     */
-    protected JPanel marginWrap(Component comp, int top, int left, int bottom, int right) {
-        JPanel wrapped = new JPanel(new GridLayout(1, 0));
-
-        wrapped.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
-        wrapped.add(comp);
-
-        return wrapped;
-    }
-
-    /**
-     * Wraps a component with an empty border (in order to create a margin effect like in HTML/CSS)
-     */
-    protected JPanel marginWrap(Component comp, int margin) {
-        return this.marginWrap(comp, margin, margin, margin, margin);
-    }
-
-    /**
-     * Provides a default {@link GridBagConstraints}
-     */
-    protected GridBagConstraints getDefaultGridBagConstraints() {
-        GridBagConstraints gbc = new GridBagConstraints();
-
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-
-        return gbc;
-    }
-
-    /**
      * Updates the entire UI components
      */
     public void updateUI() {

@@ -1,5 +1,6 @@
 package com.github.alviannn.delibre.abstracts;
 
+import com.github.alviannn.delibre.util.Utils;
 import com.sun.istack.internal.NotNull;
 
 import javax.swing.*;
@@ -76,7 +77,7 @@ public abstract class AbstractHomeView extends AbstractView {
         menu.add(first);
         menu.add(second);
 
-        return this.marginWrap(menu, 5);
+        return Utils.marginWrap(menu, 5);
     }
 
     @Override
@@ -103,7 +104,7 @@ public abstract class AbstractHomeView extends AbstractView {
         filterPanel.setBorder(BorderFactory.createTitledBorder("Filter"));
 
         JPanel bottomCenter = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = this.getDefaultGridBagConstraints();
+        GridBagConstraints gbc = Utils.getDefaultGridBagConstraints();
         gbc.ipadx = 300;
 
         bottomCenter.add(detailsPanel, gbc);
@@ -119,7 +120,7 @@ public abstract class AbstractHomeView extends AbstractView {
         center.add(bottomCenter, gbc);
 
         this.add(this.buildMenu(), BorderLayout.WEST);
-        this.add(this.marginWrap(center, 5, 0, 5, 5), BorderLayout.CENTER);
+        this.add(Utils.marginWrap(center, 5, 0, 5, 5), BorderLayout.CENTER);
     }
 
 }

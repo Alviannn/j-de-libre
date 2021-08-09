@@ -7,6 +7,7 @@ import com.github.alviannn.delibre.abstracts.AbstractHomeView;
 import com.github.alviannn.delibre.models.Book;
 import com.github.alviannn.delibre.models.Borrow;
 import com.github.alviannn.delibre.models.User;
+import com.github.alviannn.delibre.sql.Database;
 import com.github.alviannn.delibre.views.AdminHomeView;
 import com.github.alviannn.delibre.views.admin.AdminBookSection;
 import com.github.alviannn.delibre.views.admin.AdminBorrowedSection;
@@ -16,6 +17,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -38,6 +40,7 @@ public class HomeController extends AbstractController {
     @Override
     public void showView() {
         ModelHelper helper = main.getModelHelper();
+        Database db = main.getDB();
 
         // todo: check if user an admin or not
         AdminHomeView view = new AdminHomeView();
@@ -90,8 +93,8 @@ public class HomeController extends AbstractController {
             }
         });
 
-        AbstractHomeSection[] sections = {view.bookSection, view.userSection, view.borrowedSection};
-        for (AbstractHomeSection tmp : sections) {
+        AbstractHomeSection[] sectionArr = {view.bookSection, view.userSection, view.borrowedSection};
+        for (AbstractHomeSection tmp : sectionArr) {
             tmp.clearBtn.addActionListener(e -> {
                 tmp.clearDetailsFields();
                 table.clearSelection();

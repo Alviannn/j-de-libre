@@ -14,9 +14,10 @@ public class Main {
     private final AuthController auth;
     private final HomeController home;
     private final ModelHelper modelHelper;
+    private final Database db;
 
     public Main() {
-        Database db = new Database();
+        this.db = new Database();
         db.connect();
 
         try {
@@ -42,6 +43,10 @@ public class Main {
 
     public ModelHelper getModelHelper() {
         return modelHelper;
+    }
+
+    public Database getDB() {
+        return db;
     }
 
     public static void main(String[] args) {
