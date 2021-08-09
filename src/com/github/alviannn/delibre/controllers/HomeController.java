@@ -8,6 +8,7 @@ import com.github.alviannn.delibre.models.Book;
 import com.github.alviannn.delibre.models.Borrow;
 import com.github.alviannn.delibre.models.User;
 import com.github.alviannn.delibre.sql.Database;
+import com.github.alviannn.delibre.util.Utils;
 import com.github.alviannn.delibre.views.AdminHomeView;
 import com.github.alviannn.delibre.views.admin.AdminBookSection;
 import com.github.alviannn.delibre.views.admin.AdminBorrowedSection;
@@ -162,6 +163,38 @@ public class HomeController extends AbstractController {
             table.clearSelection();
 
             this.refreshTable(view);
+        });
+
+        view.bookSection.saveBtn.addActionListener(e -> {
+            AdminBookSection section = view.bookSection;
+
+            String title = "Saving Book";
+            String idText = section.idField.getText();
+
+            if (idText.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "No data was selected!", title, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            String yearString = section.yearField.getText(),
+                    pageString = section.pageField.getText();
+
+            if (!Utils.isInt(yearString) || !Utils.isInt(pageString)) {
+                JOptionPane.showMessageDialog(null, "Year or Page field must be integer!", title, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            try {
+                db.query("UPDATE SET title = ?, author = ?, year = ?, pageCount = ? WHERE id = ?;",
+                        section.titleField.getText(), section.authorField.getText(),
+                        yearString, pageString,
+                        section.idField.getText());
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
+            section.clearDetailsFields();
+            table.clearSelection();
         });
 
         view.logoutBtn.addActionListener(e -> {
