@@ -10,6 +10,10 @@ public class AuthView extends AbstractView {
     public JButton loginBtn, registerBtn;
     public JTextField userField, pwdField;
 
+    public AuthView() {
+        super(600, 600);
+    }
+
     @Override
     protected void buildFrame() {
         JLabel userLabel = new JLabel("USERNAME", JLabel.CENTER),

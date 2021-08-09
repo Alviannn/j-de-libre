@@ -16,10 +16,6 @@ public abstract class AbstractView extends JFrame {
         this.buildFrame();
     }
 
-    public AbstractView() {
-        this(600, 600);
-    }
-
     /**
      * Builds the view frame into a complete usable frame
      */

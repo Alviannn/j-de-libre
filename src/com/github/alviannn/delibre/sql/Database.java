@@ -11,6 +11,9 @@ public class Database {
 
     private Connection conn;
 
+    /**
+     * Handles opening a connection to the database (default values are hardcoded)
+     */
     public void connect() {
         try {
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/delibre", "root", "");
@@ -24,6 +27,13 @@ public class Database {
         return conn;
     }
 
+    /**
+     * Executes an SQL query without expecting a result (usually for something like INSERT statement)
+     * With this we can save up some lines when using database
+     *
+     * @param sql    the SQL query
+     * @param params the parameters (to replace all `?` accordingly)
+     */
     public void query(String sql, Object... params) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             for (int i = 0; i < params.length; i++) {
@@ -34,6 +44,12 @@ public class Database {
         }
     }
 
+    /**
+     * Executes SQL queries from a file
+     * With this we can save up some lines when using database
+     *
+     * @param file the file containing the SQL queries (to run multiple queries split them by using `;`)
+     */
     public void query(File file) throws FileNotFoundException, SQLException {
         if (!file.exists()) {
             throw new FileNotFoundException("Cannot find file " + file.getAbsolutePath() + "!");
@@ -59,6 +75,14 @@ public class Database {
         }
     }
 
+    /**
+     * Executes an SQL query and expects for a result (usually for something like SELECT statement)
+     * With this we can save up some lines when using database
+     *
+     * @param sql    the SQL query
+     * @param params the parameters (to replace all `?` accordingly)
+     * @return The result object, it has all needed attributes there like the {@link PreparedStatement} and {@link ResultSet}
+     */
     public Results results(String sql, Object... params) throws SQLException {
         PreparedStatement ps = conn.prepareStatement(sql);
         for (int i = 0; i < params.length; i++) {
