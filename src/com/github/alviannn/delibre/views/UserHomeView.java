@@ -2,23 +2,19 @@ package com.github.alviannn.delibre.views;
 
 import com.github.alviannn.delibre.abstracts.AbstractHomeSection;
 import com.github.alviannn.delibre.abstracts.AbstractHomeView;
-import com.github.alviannn.delibre.views.admin.AdminBookSection;
-import com.github.alviannn.delibre.views.admin.AdminBorrowedSection;
-import com.github.alviannn.delibre.views.admin.AdminUserSection;
+import com.github.alviannn.delibre.views.user.UserBookSection;
+import com.github.alviannn.delibre.views.user.UserBorrowedSection;
 
-public class AdminHomeView extends AbstractHomeView {
+public class UserHomeView extends AbstractHomeView {
 
-    public AdminBookSection bookSection;
-    public AdminUserSection userSection;
-    public AdminBorrowedSection borrowedSection;
+    public UserBookSection bookSection;
+    public UserBorrowedSection borrowedSection;
 
     @Override
     public AbstractHomeSection getAppliedSection() {
         switch (currentSection) {
             case BOOK:
                 return bookSection;
-            case USER:
-                return userSection;
             case BORROWED:
                 return borrowedSection;
             default:
@@ -31,8 +27,6 @@ public class AdminHomeView extends AbstractHomeView {
         switch (type) {
             case BOOK:
                 return bookSection;
-            case USER:
-                return userSection;
             case BORROWED:
                 return borrowedSection;
             default:
@@ -44,11 +38,10 @@ public class AdminHomeView extends AbstractHomeView {
     protected void buildFrame() {
         super.buildFrame();
 
-        this.setTitle("De Libre - Admin");
+        this.setTitle("De Libre - User");
 
-        bookSection = new AdminBookSection(this);
-        userSection = new AdminUserSection(this);
-        borrowedSection = new AdminBorrowedSection(this);
+        bookSection = new UserBookSection(this);
+        borrowedSection = new UserBorrowedSection(this);
 
         // apply the default section
         bookSection.applyView();

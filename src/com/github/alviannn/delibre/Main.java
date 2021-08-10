@@ -1,8 +1,11 @@
 package com.github.alviannn.delibre;
 
+import com.github.alviannn.delibre.abstracts.AbstractHomeController;
+import com.github.alviannn.delibre.controllers.AdminHomeController;
 import com.github.alviannn.delibre.controllers.AuthController;
-import com.github.alviannn.delibre.controllers.HomeController;
 import com.github.alviannn.delibre.controllers.ModelHelper;
+import com.github.alviannn.delibre.controllers.UserHomeController;
+import com.github.alviannn.delibre.models.User;
 import com.github.alviannn.delibre.sql.Database;
 
 import java.io.File;
@@ -12,9 +15,11 @@ import java.sql.SQLException;
 public class Main {
 
     private final AuthController auth;
-    private final HomeController home;
     private final ModelHelper modelHelper;
     private final Database db;
+    private final AbstractHomeController admin, user;
+
+    private User currentUser;
 
     public Main() {
         this.db = new Database();
@@ -27,18 +32,32 @@ public class Main {
         }
 
         this.modelHelper = new ModelHelper(db);
+
         this.auth = new AuthController(this);
-        this.home = new HomeController(this);
+        this.admin = new AdminHomeController(this);
+        this.user = new UserHomeController(this);
 
         auth.showView();
     }
 
-    public AuthController getAuth() {
-        return auth;
+    public User getCurrentUser() {
+        return currentUser;
     }
 
-    public HomeController getHome() {
-        return home;
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    public AbstractHomeController getAdmin() {
+        return admin;
+    }
+
+    public AbstractHomeController getUser() {
+        return user;
+    }
+
+    public AuthController getAuth() {
+        return auth;
     }
 
     public ModelHelper getModelHelper() {

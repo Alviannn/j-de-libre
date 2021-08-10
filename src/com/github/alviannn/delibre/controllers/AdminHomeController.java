@@ -1,12 +1,9 @@
 package com.github.alviannn.delibre.controllers;
 
 import com.github.alviannn.delibre.Main;
-import com.github.alviannn.delibre.abstracts.AbstractController;
+import com.github.alviannn.delibre.abstracts.AbstractHomeController;
 import com.github.alviannn.delibre.abstracts.AbstractHomeSection;
 import com.github.alviannn.delibre.abstracts.AbstractHomeView;
-import com.github.alviannn.delibre.models.Book;
-import com.github.alviannn.delibre.models.Borrow;
-import com.github.alviannn.delibre.models.User;
 import com.github.alviannn.delibre.sql.Database;
 import com.github.alviannn.delibre.util.Utils;
 import com.github.alviannn.delibre.views.AdminHomeView;
@@ -15,27 +12,14 @@ import com.github.alviannn.delibre.views.admin.AdminBorrowedSection;
 import com.github.alviannn.delibre.views.admin.AdminUserSection;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.List;
 
-public class HomeController extends AbstractController {
+public class AdminHomeController extends AbstractHomeController {
 
-    private User currentUser;
-
-    public HomeController(Main main) {
+    public AdminHomeController(Main main) {
         super(main);
-    }
-
-    public void setCurrentUser(User currentUser) {
-        this.currentUser = currentUser;
-    }
-
-    public User getCurrentUser() {
-        return currentUser;
     }
 
     @Override
@@ -43,7 +27,6 @@ public class HomeController extends AbstractController {
         ModelHelper helper = main.getModelHelper();
         Database db = main.getDB();
 
-        // todo: check if user an admin or not
         AdminHomeView view = new AdminHomeView();
         view.setVisible(true);
 
@@ -192,67 +175,6 @@ public class HomeController extends AbstractController {
 
             this.refreshTable(view);
         });
-
-        view.logoutBtn.addActionListener(e -> {
-            view.dispose();
-            main.getAuth().showView();
-        });
-
-        this.refreshTable(view);
-    }
-
-    private void refreshTable(AbstractHomeView view) {
-        DefaultTableModel model = null;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-        ModelHelper helper = main.getModelHelper();
-
-        switch (view.currentSection) {
-            case AbstractHomeView.BOOK: {
-                model = new DefaultTableModel(Book.Field.getFieldNames(), 0);
-                List<Book> books = helper.getAllBooks();
-
-                for (Book book : books) {
-                    model.addRow(new Object[]{
-                            book.getId() + "",
-                            book.getTitle(), book.getAuthor(),
-                            book.getYear() + "", book.getPageCount() + ""});
-                }
-                break;
-            }
-            case AbstractHomeView.USER: {
-                model = new DefaultTableModel(User.Field.getFieldNames(), 0);
-                List<User> users = helper.getAllUsers();
-
-                for (User user : users) {
-                    model.addRow(new Object[]{
-                            user.getId() + "",
-                            user.getName(),
-                            dateFormat.format(user.getRegisteredDate())});
-                }
-                break;
-            }
-            case AbstractHomeView.BORROWED: {
-                model = new DefaultTableModel(Borrow.Field.getFieldNames(), 0);
-                List<Borrow> borrows = helper.getAllBorrowed();
-
-                for (Borrow borrow : borrows) {
-                    model.addRow(new Object[]{
-                            borrow.getId() + "",
-                            borrow.getUserId() + "",
-                            borrow.getBookId() + "",
-                            dateFormat.format(borrow.getBorrowDate()),
-                            dateFormat.format(borrow.getDueDate()),
-                            borrow.getUsername(),
-                            borrow.getBookTitle()
-                    });
-                }
-                break;
-            }
-        }
-
-        assert model != null;
-        view.table.setModel(model);
     }
 
     private void changeAdminSection(AdminHomeView view, int type) {
