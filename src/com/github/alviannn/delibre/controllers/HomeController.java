@@ -111,9 +111,7 @@ public class HomeController extends AbstractController {
             if (idString.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "No data was selected!", title, JOptionPane.ERROR_MESSAGE);
             } else {
-                int id = Integer.parseInt(idString);
-                helper.removeBook(id);
-
+                helper.removeBook(Integer.parseInt(idString));
                 JOptionPane.showMessageDialog(null, "Successfully deleted the data!", title, JOptionPane.INFORMATION_MESSAGE);
             }
 
@@ -132,9 +130,7 @@ public class HomeController extends AbstractController {
             if (idString.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "No data was selected!", title, JOptionPane.ERROR_MESSAGE);
             } else {
-                int id = Integer.parseInt(idString);
-                helper.removeUser(id);
-
+                helper.removeUser(Integer.parseInt(idString));
                 JOptionPane.showMessageDialog(null, "Successfully deleted the data!", title, JOptionPane.INFORMATION_MESSAGE);
             }
 
@@ -153,9 +149,7 @@ public class HomeController extends AbstractController {
             if (idString.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "No data was selected!", title, JOptionPane.ERROR_MESSAGE);
             } else {
-                int id = Integer.parseInt(idString);
-                helper.removeUser(id);
-
+                helper.removeBorrowedBook(Integer.parseInt(idString));
                 JOptionPane.showMessageDialog(null, "Successfully deleted the data!", title, JOptionPane.INFORMATION_MESSAGE);
             }
 
