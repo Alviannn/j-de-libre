@@ -14,20 +14,12 @@ public abstract class AbstractHomeSection {
 
     public JComboBox<String> categoryField, sortTypeField;
     public JTextField searchField;
-    public JButton clearBtn = new JButton("Clear"), searchBtn;
+    public JButton clearBtn, searchBtn;
 
     public AbstractHomeSection(AbstractHomeView view, JButton mainBtn, int section) {
         this.view = view;
         this.mainBtn = mainBtn;
         this.section = section;
-    }
-
-    protected void makeFilters() {
-        JPanel filter = view.filterPanel;
-
-        JLabel categoryLabel = new JLabel("Category"),
-                sortTypeLabel = new JLabel("Sort Type"),
-                searchLabel = new JLabel("Search");
 
         String[] categoryValues;
         switch (section) {
@@ -44,9 +36,20 @@ public abstract class AbstractHomeSection {
                 throw new IllegalStateException("Unexpected value: " + section);
         }
 
-        categoryField = new JComboBox<>(categoryValues);
-        sortTypeField = new JComboBox<>(new String[]{"ASCENDING", "DESCENDING"});
-        searchField = new JTextField();
+        this.categoryField = new JComboBox<>(categoryValues);
+        this.sortTypeField = new JComboBox<>(new String[]{"ASCENDING", "DESCENDING"});
+        this.searchField = new JTextField();
+
+        this.clearBtn = new JButton("Clear");
+        this.searchBtn = new JButton("Search");
+    }
+
+    protected void makeFilters() {
+        JPanel filter = view.filterPanel;
+
+        JLabel categoryLabel = new JLabel("Category"),
+                sortTypeLabel = new JLabel("Sort Type"),
+                searchLabel = new JLabel("Search");
 
         int formCenter = 40;
         int formGap = 35;
@@ -59,8 +62,6 @@ public abstract class AbstractHomeSection {
 
         searchLabel.setBounds(30 + formCenter, 20 + (formGap * 2), 130, 50);
         searchField.setBounds(90 + formCenter, 30 + (formGap * 2), 200, 30);
-
-        searchBtn = new JButton("Search");
 
         int btnWidth = 130;
         int btnCenter = (395 - btnWidth) / 2;
