@@ -24,15 +24,12 @@ public class AdminHomeController extends AbstractHomeController {
 
     @Override
     public void showView() {
-        ModelHelper helper = main.getModelHelper();
-        Database db = main.getDB();
-
         AdminHomeView view = new AdminHomeView();
         view.setVisible(true);
 
-        view.booksBtn.addActionListener(e -> this.changeAdminSection(view, AbstractHomeView.BOOK));
-        view.usersBtn.addActionListener(e -> this.changeAdminSection(view, AbstractHomeView.USER));
-        view.borrowedBtn.addActionListener(e -> this.changeAdminSection(view, AbstractHomeView.BORROWED));
+        view.booksBtn.addActionListener(e -> this.changeSectionAction(view, AbstractHomeView.BOOK));
+        view.usersBtn.addActionListener(e -> this.changeSectionAction(view, AbstractHomeView.USER));
+        view.borrowedBtn.addActionListener(e -> this.changeSectionAction(view, AbstractHomeView.BORROWED));
 
         JTable table = view.table;
         table.addMouseListener(new MouseAdapter() {
@@ -77,6 +74,7 @@ public class AdminHomeController extends AbstractHomeController {
             }
         });
 
+        // combined to an array and loop it to simplify codes
         AbstractHomeSection[] sectionArr = {view.bookSection, view.userSection, view.borrowedSection};
         for (AbstractHomeSection section : sectionArr) {
             section.clearBtn.addActionListener(e -> {
@@ -93,11 +91,12 @@ public class AdminHomeController extends AbstractHomeController {
             });
         }
 
-        view.bookSection.deleteBtn.addActionListener(e -> this.deleteSection(view, AbstractHomeView.BOOK));
-        view.userSection.deleteBtn.addActionListener(e -> this.deleteSection(view, AbstractHomeView.USER));
-        view.borrowedSection.deleteBtn.addActionListener(e -> this.deleteSection(view, AbstractHomeView.BORROWED));
+        view.bookSection.deleteBtn.addActionListener(e -> this.deleteSectionItemAction(view, AbstractHomeView.BOOK));
+        view.userSection.deleteBtn.addActionListener(e -> this.deleteSectionItemAction(view, AbstractHomeView.USER));
+        view.borrowedSection.deleteBtn.addActionListener(e -> this.deleteSectionItemAction(view, AbstractHomeView.BORROWED));
 
         view.bookSection.saveBtn.addActionListener(e -> {
+            Database db = main.getDB();
             AdminBookSection section = view.bookSection;
 
             String title = "Saving Book";
@@ -140,7 +139,13 @@ public class AdminHomeController extends AbstractHomeController {
         this.refreshTable(view);
     }
 
-    private void changeAdminSection(AdminHomeView view, int type) {
+    /**
+     * Action that changes currently applied section to another section
+     * <p>
+     * Will automatically dispose the previous sections, apply the new one, and updates the UI (components and table)
+     * To shorten codes
+     */
+    private void changeSectionAction(AdminHomeView view, int type) {
         view.disposeSections();
 
         AbstractHomeSection section = view.getSection(type);
@@ -150,7 +155,13 @@ public class AdminHomeController extends AbstractHomeController {
         view.updateUI();
     }
 
-    private void deleteSection(AdminHomeView view, int type) {
+    /**
+     * Action that deletes the currently selected item within a section
+     * <p>
+     * Automatically picks the currently applied section and decides which data should be deleted
+     * based on the provided {@code type}.
+     */
+    private void deleteSectionItemAction(AdminHomeView view, int type) {
         ModelHelper helper = main.getModelHelper();
         String title, idString;
 
