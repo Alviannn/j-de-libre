@@ -48,15 +48,15 @@ public class Main {
         this.currentUser = currentUser;
     }
 
-    public AbstractHomeController getAdmin() {
+    public AbstractHomeController getAdminController() {
         return admin;
     }
 
-    public AbstractHomeController getUser() {
+    public AbstractHomeController getUserController() {
         return user;
     }
 
-    public AuthController getAuth() {
+    public AuthController getAuthController() {
         return auth;
     }
 

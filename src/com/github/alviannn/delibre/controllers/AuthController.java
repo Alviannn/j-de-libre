@@ -41,9 +41,9 @@ public class AuthController extends AbstractController {
 
                 main.setCurrentUser(found);
                 if (found.isAdmin()) {
-                    main.getAdmin().showView();
+                    main.getAdminController().showView();
                 } else {
-                    main.getUser().showView();
+                    main.getUserController().showView();
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Username or password does not match!", title, JOptionPane.ERROR_MESSAGE);

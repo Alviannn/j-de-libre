@@ -1,6 +1,7 @@
 package com.github.alviannn.delibre.models;
 
 import java.sql.Date;
+import java.util.Arrays;
 
 public class Borrow {
 
@@ -58,25 +59,25 @@ public class Borrow {
         BOOK_TITLE("Book Title");
 
         private final String name;
+        private final boolean searchable;
 
         Field(String name) {
             this.name = name;
+            this.searchable = false;
         }
 
         public String getName() {
             return name;
         }
 
-        public static String[] getFieldNames() {
-            Field[] types = values();
-            String[] names = new String[types.length];
-
-            for (int i = 0; i < types.length; i++) {
-                names[i] = types[i].getName();
-            }
-
-            return names;
+        public boolean isSearchable() {
+            return searchable;
         }
+
+        public static String[] getFieldNames() {
+            return Arrays.stream(Field.values()).map(Field::getName).toArray(String[]::new);
+        }
+
     }
 
 }

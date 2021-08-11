@@ -1,5 +1,7 @@
 package com.github.alviannn.delibre.models;
 
+import java.util.Arrays;
+
 public class Book {
 
     private final int id;
@@ -35,31 +37,34 @@ public class Book {
     }
 
     public enum Field {
-        ID("ID"),
+        ID("ID", false),
         TITLE("Title"),
         AUTHOR("Author"),
-        YEAR("Year"),
-        PAGE_COUNT("Page");
+        YEAR("Year", false),
+        PAGE_COUNT("Page", false);
 
         private final String name;
+        private final boolean searchable;
+
+        Field(String name, boolean searchable) {
+            this.name = name;
+            this.searchable = searchable;
+        }
 
         Field(String name) {
-            this.name = name;
+            this(name, true);
         }
 
         public String getName() {
             return name;
         }
 
+        public boolean isSearchable() {
+            return searchable;
+        }
+
         public static String[] getFieldNames() {
-            Field[] types = Field.values();
-            String[] names = new String[types.length];
-
-            for (int i = 0; i < types.length; i++) {
-                names[i] = types[i].getName();
-            }
-
-            return names;
+            return Arrays.stream(Field.values()).map(Field::getName).toArray(String[]::new);
         }
     }
 
