@@ -175,6 +175,14 @@ public class AdminHomeController extends AbstractHomeController {
 
             this.refreshTable(view);
         });
+
+        view.logoutBtn.addActionListener(e -> {
+            view.dispose();
+            main.setCurrentUser(null);
+            main.getAuth().showView();
+        });
+
+        this.refreshTable(view);
     }
 
     private void changeAdminSection(AdminHomeView view, int type) {
