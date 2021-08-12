@@ -5,6 +5,7 @@ import com.github.alviannn.delibre.controllers.ModelHelper;
 import com.github.alviannn.delibre.models.Book;
 import com.github.alviannn.delibre.models.Borrow;
 import com.github.alviannn.delibre.models.User;
+import com.github.alviannn.delibre.util.SortType;
 
 import javax.swing.table.DefaultTableModel;
 import java.text.SimpleDateFormat;
@@ -22,10 +23,20 @@ public abstract class AbstractHomeController extends AbstractController {
 
         ModelHelper helper = main.getModelHelper();
 
+        String sortItem = (String) view.getAppliedSection().sortTypeField.getSelectedItem();
+        String categoryItem = (String) view.getAppliedSection().categoryField.getSelectedItem();
+
+        SortType currentSort = SortType.NONE;
+        if (sortItem != null) {
+            currentSort = SortType.valueOf(sortItem);
+        }
+
         switch (view.currentSection) {
             case AbstractHomeView.BOOK: {
                 model = new DefaultTableModel(Book.Field.getFieldNames(), 0);
-                List<Book> books = helper.getAllBooks();
+                String column = Book.Field.fromName(categoryItem).getColumn();
+
+                List<Book> books = helper.getAllBooks(currentSort, column);
 
                 for (Book book : books) {
                     model.addRow(new Object[]{
@@ -37,7 +48,9 @@ public abstract class AbstractHomeController extends AbstractController {
             }
             case AbstractHomeView.USER: {
                 model = new DefaultTableModel(User.Field.getFieldNames(), 0);
-                List<User> users = helper.getAllUsers();
+                String column = User.Field.fromName(categoryItem).getColumn();
+
+                List<User> users = helper.getAllUsers(currentSort, column);
 
                 for (User user : users) {
                     model.addRow(new Object[]{
@@ -49,7 +62,9 @@ public abstract class AbstractHomeController extends AbstractController {
             }
             case AbstractHomeView.BORROWED: {
                 model = new DefaultTableModel(Borrow.Field.getFieldNames(), 0);
-                List<Borrow> borrows = helper.getAllBorrowed();
+                String column = Borrow.Field.fromName(categoryItem).getColumn();
+
+                List<Borrow> borrows = helper.getAllBorrowed(currentSort, column);
 
                 for (Borrow borrow : borrows) {
                     model.addRow(new Object[]{
