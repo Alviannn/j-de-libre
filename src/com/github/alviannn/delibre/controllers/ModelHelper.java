@@ -5,6 +5,7 @@ import com.github.alviannn.delibre.models.Borrow;
 import com.github.alviannn.delibre.models.User;
 import com.github.alviannn.delibre.sql.Database;
 import com.github.alviannn.delibre.sql.Results;
+import com.github.alviannn.delibre.util.SortType;
 import com.sun.istack.internal.Nullable;
 
 import java.sql.Date;
@@ -21,6 +22,8 @@ public class ModelHelper {
     public ModelHelper(Database db) {
         this.db = db;
     }
+
+    // ---------------------------------------------------------------------------------------------- //
 
     /**
      * Tries to find a user within the database
@@ -53,10 +56,11 @@ public class ModelHelper {
 
     // ---------------------------------------------------------------------------------------------- //
 
-    public List<User> getAllUsers() {
+    public List<User> getAllUsers(SortType sort, String field) {
         List<User> users = new ArrayList<>();
+        String sortQuery = sort.makeQuery(field);
 
-        try (Results res = db.results("SELECT * FROM users;")) {
+        try (Results res = db.results("SELECT * FROM users" + sortQuery + ";")) {
             ResultSet rs = res.getResultSet();
             while (rs.next()) {
                 User user = new User(
@@ -75,10 +79,11 @@ public class ModelHelper {
         return users;
     }
 
-    public List<Book> getAllBooks() {
+    public List<Book> getAllBooks(SortType sort, String field) {
         List<Book> books = new ArrayList<>();
+        String sortQuery = sort.makeQuery(field);
 
-        try (Results res = db.results("SELECT * FROM books;")) {
+        try (Results res = db.results("SELECT * FROM books" + sortQuery + ";")) {
             ResultSet rs = res.getResultSet();
             while (rs.next()) {
                 Book book = new Book(rs.getInt("id"),
@@ -96,13 +101,14 @@ public class ModelHelper {
         return books;
     }
 
-    public List<Borrow> getAllBorrowed() {
+    public List<Borrow> getAllBorrowed(SortType sort, String field) {
         List<Borrow> borrows = new ArrayList<>();
+        String sortQuery = sort.makeQuery(field);
 
         try (Results results = db.results(
                 "SELECT borrows.*, users.name AS username, books.title AS title FROM borrows "
                 + "JOIN users ON borrows.userId = users.id "
-                + "JOIN books ON borrows.bookId = books.id;")) {
+                + "JOIN books ON borrows.bookId = books.id" + sortQuery + ";")) {
 
             ResultSet rs = results.getResultSet();
             while (rs.next()) {

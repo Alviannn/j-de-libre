@@ -104,15 +104,8 @@ public class AdminBorrowedSection extends AbstractHomeSection {
     public void applyView() {
         super.applyView();
 
-        // disable filters
-        categoryField.setEnabled(false);
-        sortTypeField.setEnabled(false);
+        // disable search field
         searchField.setEnabled(false);
-        searchBtn.setEnabled(false);
-
-        // clear items from dropdown
-        sortTypeField.removeAllItems();
-        categoryField.removeAllItems();
     }
 
     @Override
