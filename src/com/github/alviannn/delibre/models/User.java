@@ -3,6 +3,7 @@ package com.github.alviannn.delibre.models;
 
 import java.sql.Date;
 import java.util.Arrays;
+import java.util.Optional;
 
 public class User {
 
@@ -40,24 +41,25 @@ public class User {
     }
 
     public enum Field {
-        ID("ID", false),
-        USERNAME("Username"),
-        REGISTER_DATE("Register Date", false);
+        ID("ID", "id", false),
+        USERNAME("Username", "name", true),
+        REGISTER_DATE("Register Date", "registerDate", false);
 
-        private final String name;
+        private final String name, column;
         private final boolean searchable;
 
-        Field(String name, boolean searchable) {
+        Field(String name, String column, boolean searchable) {
             this.name = name;
+            this.column = column;
             this.searchable = searchable;
-        }
-
-        Field(String name) {
-            this(name, true);
         }
 
         public String getName() {
             return name;
+        }
+
+        public String getColumn() {
+            return column;
         }
 
         public boolean isSearchable() {
@@ -66,6 +68,14 @@ public class User {
 
         public static String[] getFieldNames() {
             return Arrays.stream(Field.values()).map(Field::getName).toArray(String[]::new);
+        }
+
+        public static Field fromName(String name) {
+            Optional<Field> first = Arrays.stream(values())
+                    .filter(f -> f.name.equals(name))
+                    .findFirst();
+
+            return first.orElse(null);
         }
 
     }

@@ -2,6 +2,7 @@ package com.github.alviannn.delibre.models;
 
 import java.sql.Date;
 import java.util.Arrays;
+import java.util.Optional;
 
 public class Borrow {
 
@@ -48,26 +49,31 @@ public class Borrow {
     }
 
     public enum Field {
-        ID("ID"),
-        USER_ID("User ID"),
-        BOOK_ID("Book ID"),
+        ID("ID", "id"),
+        USER_ID("User ID", "userId"),
+        BOOK_ID("Book ID", "bookId"),
 
-        BORROW_DATE("Borrow Date"),
-        DUE_DATE("Due Date"),
+        BORROW_DATE("Borrow Date", "borrowDate"),
+        DUE_DATE("Due Date", "dueDate"),
 
-        USERNAME("Username"),
-        BOOK_TITLE("Book Title");
+        USERNAME("Username", "user.name"),
+        BOOK_TITLE("Book Title", "book.title");
 
-        private final String name;
+        private final String name, column;
         private final boolean searchable;
 
-        Field(String name) {
+        Field(String name, String column) {
             this.name = name;
+            this.column = column;
             this.searchable = false;
         }
 
         public String getName() {
             return name;
+        }
+
+        public String getColumn() {
+            return column;
         }
 
         public boolean isSearchable() {
@@ -76,6 +82,14 @@ public class Borrow {
 
         public static String[] getFieldNames() {
             return Arrays.stream(Field.values()).map(Field::getName).toArray(String[]::new);
+        }
+
+        public static Field fromName(String name) {
+            Optional<Field> first = Arrays.stream(values())
+                    .filter(f -> f.name.equals(name))
+                    .findFirst();
+
+            return first.orElse(null);
         }
 
     }

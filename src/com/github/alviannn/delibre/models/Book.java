@@ -1,6 +1,7 @@
 package com.github.alviannn.delibre.models;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 public class Book {
 
@@ -37,26 +38,27 @@ public class Book {
     }
 
     public enum Field {
-        ID("ID", false),
-        TITLE("Title"),
-        AUTHOR("Author"),
-        YEAR("Year", false),
-        PAGE_COUNT("Page", false);
+        ID("ID", "id", false),
+        TITLE("Title", "title", true),
+        AUTHOR("Author", "author", true),
+        YEAR("Year", "year", false),
+        PAGE_COUNT("Page", "page", false);
 
-        private final String name;
+        private final String name, column;
         private final boolean searchable;
 
-        Field(String name, boolean searchable) {
+        Field(String name, String column, boolean searchable) {
             this.name = name;
+            this.column = column;
             this.searchable = searchable;
-        }
-
-        Field(String name) {
-            this(name, true);
         }
 
         public String getName() {
             return name;
+        }
+
+        public String getColumn() {
+            return column;
         }
 
         public boolean isSearchable() {
@@ -66,6 +68,15 @@ public class Book {
         public static String[] getFieldNames() {
             return Arrays.stream(Field.values()).map(Field::getName).toArray(String[]::new);
         }
+
+        public static Field fromName(String name) {
+            Optional<Field> first = Arrays.stream(values())
+                    .filter(f -> f.name.equals(name))
+                    .findFirst();
+
+            return first.orElse(null);
+        }
+
     }
 
 }
