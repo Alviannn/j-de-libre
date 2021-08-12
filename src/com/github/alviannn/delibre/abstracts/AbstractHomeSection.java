@@ -3,6 +3,7 @@ package com.github.alviannn.delibre.abstracts;
 import com.github.alviannn.delibre.models.Book;
 import com.github.alviannn.delibre.models.Borrow;
 import com.github.alviannn.delibre.models.User;
+import com.github.alviannn.delibre.util.SortType;
 
 import javax.swing.*;
 
@@ -37,7 +38,7 @@ public abstract class AbstractHomeSection {
         }
 
         this.categoryField = new JComboBox<>(categoryValues);
-        this.sortTypeField = new JComboBox<>(new String[]{"ASCENDING", "DESCENDING"});
+        this.sortTypeField = new JComboBox<>(SortType.getNames());
         this.searchField = new JTextField();
 
         this.clearBtn = new JButton("Clear");

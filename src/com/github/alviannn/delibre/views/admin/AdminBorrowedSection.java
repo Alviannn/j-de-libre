@@ -109,7 +109,10 @@ public class AdminBorrowedSection extends AbstractHomeSection {
         sortTypeField.setEnabled(false);
         searchField.setEnabled(false);
         searchBtn.setEnabled(false);
+
+        // clear items from dropdown
         sortTypeField.removeAllItems();
+        categoryField.removeAllItems();
     }
 
     @Override
