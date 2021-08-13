@@ -1,10 +1,5 @@
 package com.github.alviannn.delibre.abstracts;
 
-import com.github.alviannn.delibre.models.Book;
-import com.github.alviannn.delibre.models.Borrow;
-import com.github.alviannn.delibre.models.User;
-import com.github.alviannn.delibre.util.SortType;
-
 import javax.swing.*;
 
 public abstract class AbstractHomeSection {
@@ -12,83 +7,19 @@ public abstract class AbstractHomeSection {
     protected final AbstractHomeView view;
     public final JButton mainBtn;
     protected final int section;
-
-    public JComboBox<String> categoryField, sortTypeField;
-    public JTextField searchField;
-    public JButton clearBtn, searchBtn;
+    public JButton clearBtn;
 
     public AbstractHomeSection(AbstractHomeView view, JButton mainBtn, int section) {
         this.view = view;
         this.mainBtn = mainBtn;
         this.section = section;
 
-        String[] categoryValues;
-        switch (section) {
-            case AbstractHomeView.BOOK:
-                categoryValues = Book.Field.getFieldNames();
-                break;
-            case AbstractHomeView.USER:
-                categoryValues = User.Field.getFieldNames();
-                break;
-            case AbstractHomeView.BORROWED:
-                categoryValues = Borrow.Field.getFieldNames();
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + section);
-        }
-
-        this.categoryField = new JComboBox<>(categoryValues);
-        this.sortTypeField = new JComboBox<>(SortType.getNames());
-        this.searchField = new JTextField();
-
         this.clearBtn = new JButton("Clear");
-        this.searchBtn = new JButton("Search");
-    }
-
-    protected void makeFilters() {
-        JPanel filter = view.filterPanel;
-
-        JLabel categoryLabel = new JLabel("Category"),
-                sortTypeLabel = new JLabel("Sort Type"),
-                searchLabel = new JLabel("Search");
-
-        int formCenter = 40;
-        int formGap = 35;
-
-        categoryLabel.setBounds(30 + formCenter, 20, 130, 50);
-        categoryField.setBounds(90 + formCenter, 30, 200, 30);
-
-        sortTypeLabel.setBounds(30 + formCenter, 20 + formGap, 130, 50);
-        sortTypeField.setBounds(90 + formCenter, 30 + formGap, 200, 30);
-
-        searchLabel.setBounds(30 + formCenter, 20 + (formGap * 2), 130, 50);
-        searchField.setBounds(90 + formCenter, 30 + (formGap * 2), 200, 30);
-
-        int btnWidth = 130;
-        int btnCenter = (395 - btnWidth) / 2;
-        searchBtn.setBounds(btnCenter, 160, btnWidth, 40);
-
-        filter.add(categoryLabel);
-        filter.add(categoryField);
-
-        filter.add(sortTypeLabel);
-        filter.add(sortTypeField);
-
-        filter.add(searchLabel);
-        filter.add(searchField);
-
-        filter.add(searchBtn);
     }
 
     protected abstract void makeDetails();
 
     public abstract void clearDetailsFields();
-
-    public void clearFiltersFields() {
-        categoryField.setSelectedIndex(categoryField.getItemCount() == 0 ? -1 : 0);
-        sortTypeField.setSelectedIndex(sortTypeField.getItemCount() == 0 ? -1 : 0);
-        searchField.setText("");
-    }
 
     /**
      * Updates the view of the current home view
@@ -101,11 +32,10 @@ public abstract class AbstractHomeSection {
 
         // clear the panels
         view.detailsPanel.removeAll();
-        view.filterPanel.removeAll();
 
         // re-build the panels
+        view.changeFilterSection();
         this.makeDetails();
-        this.makeFilters();
 
         // disable button
         mainBtn.setEnabled(false);
@@ -118,7 +48,6 @@ public abstract class AbstractHomeSection {
      */
     public void dispose() {
         this.clearDetailsFields();
-        this.clearFiltersFields();
 
         // re-enable button
         mainBtn.setEnabled(true);

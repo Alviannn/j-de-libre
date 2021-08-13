@@ -6,7 +6,6 @@ import com.github.alviannn.delibre.models.Book;
 import com.github.alviannn.delibre.models.Borrow;
 import com.github.alviannn.delibre.models.User;
 import com.github.alviannn.delibre.util.SortType;
-import com.github.alviannn.delibre.views.AdminHomeView;
 
 import javax.swing.table.DefaultTableModel;
 import java.text.SimpleDateFormat;
@@ -24,8 +23,8 @@ public abstract class AbstractHomeController extends AbstractController {
 
         ModelHelper helper = main.getModelHelper();
 
-        String sortItem = (String) view.getAppliedSection().sortTypeField.getSelectedItem();
-        String categoryItem = (String) view.getAppliedSection().categoryField.getSelectedItem();
+        String sortItem = (String) view.sortTypeField.getSelectedItem();
+        String categoryItem = (String) view.categoryField.getSelectedItem();
 
         SortType currentSort = SortType.NONE;
         if (sortItem != null) {

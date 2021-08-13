@@ -105,7 +105,7 @@ public class AdminBorrowedSection extends AbstractHomeSection {
         super.applyView();
 
         // disable search field
-        searchField.setEnabled(false);
+        view.searchField.setEnabled(false);
     }
 
     @Override

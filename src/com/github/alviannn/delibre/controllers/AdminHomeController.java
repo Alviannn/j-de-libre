@@ -81,15 +81,15 @@ public class AdminHomeController extends AbstractHomeController {
                 section.clearDetailsFields();
                 table.clearSelection();
             });
-
-            section.sortTypeField.addActionListener(e -> {
-                String item = (String) section.sortTypeField.getSelectedItem();
-            });
-
-            section.categoryField.addActionListener(e -> {
-                String item = (String) section.categoryField.getSelectedItem();
-            });
         }
+
+        view.sortTypeField.addActionListener(e -> {
+            String item = (String) view.sortTypeField.getSelectedItem();
+        });
+
+        view.categoryField.addActionListener(e -> {
+            String item = (String) view.categoryField.getSelectedItem();
+        });
 
         view.bookSection.deleteBtn.addActionListener(e -> this.deleteSectionItemAction(view, AbstractHomeView.BOOK));
         view.userSection.deleteBtn.addActionListener(e -> this.deleteSectionItemAction(view, AbstractHomeView.USER));
