@@ -140,22 +140,6 @@ public class AdminHomeController extends AbstractHomeController {
     }
 
     /**
-     * Action that changes currently applied section to another section
-     * <p>
-     * Will automatically dispose the previous sections, apply the new one, and updates the UI (components and table)
-     * To shorten codes
-     */
-    private void changeSectionAction(AdminHomeView view, int type) {
-        view.disposeSections();
-
-        AbstractHomeSection section = view.getSection(type);
-        section.applyView();
-
-        this.refreshTable(view);
-        view.updateUI();
-    }
-
-    /**
      * Action that deletes the currently selected item within a section
      * <p>
      * Automatically picks the currently applied section and decides which data should be deleted

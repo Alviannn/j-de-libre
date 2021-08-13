@@ -2,6 +2,7 @@ package com.github.alviannn.delibre.controllers;
 
 import com.github.alviannn.delibre.Main;
 import com.github.alviannn.delibre.abstracts.AbstractHomeController;
+import com.github.alviannn.delibre.abstracts.AbstractHomeView;
 import com.github.alviannn.delibre.sql.Database;
 import com.github.alviannn.delibre.views.UserHomeView;
 
@@ -19,10 +20,9 @@ public class UserHomeController extends AbstractHomeController {
         UserHomeView view = new UserHomeView();
         view.setVisible(true);
 
-        view.booksBtn.addActionListener(e -> {
-        });
-        view.borrowedBtn.addActionListener(e -> {
-        });
+        view.booksBtn.addActionListener(e -> this.changeSectionAction(view, AbstractHomeView.BOOK));
+        view.borrowedBtn.addActionListener(e -> this.changeSectionAction(view, AbstractHomeView.BORROWED));
+
         // user's view shouldn't have any 'Users' menu
         view.remove(view.usersBtn);
 

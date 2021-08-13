@@ -6,6 +6,7 @@ import com.github.alviannn.delibre.models.Book;
 import com.github.alviannn.delibre.models.Borrow;
 import com.github.alviannn.delibre.models.User;
 import com.github.alviannn.delibre.util.SortType;
+import com.github.alviannn.delibre.views.AdminHomeView;
 
 import javax.swing.table.DefaultTableModel;
 import java.text.SimpleDateFormat;
@@ -83,6 +84,22 @@ public abstract class AbstractHomeController extends AbstractController {
 
         assert model != null;
         view.table.setModel(model);
+    }
+
+    /**
+     * Action that changes currently applied section to another section
+     * <p>
+     * Will automatically dispose the previous sections, apply the new one, and updates the UI (components and table)
+     * To shorten codes
+     */
+    protected void changeSectionAction(AbstractHomeView view, int type) {
+        view.disposeSections();
+
+        AbstractHomeSection section = view.getSection(type);
+        section.applyView();
+
+        this.refreshTable(view);
+        view.updateUI();
     }
 
 }
