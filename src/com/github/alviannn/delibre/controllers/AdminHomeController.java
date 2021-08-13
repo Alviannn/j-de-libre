@@ -4,6 +4,9 @@ import com.github.alviannn.delibre.Main;
 import com.github.alviannn.delibre.abstracts.AbstractHomeController;
 import com.github.alviannn.delibre.abstracts.AbstractHomeSection;
 import com.github.alviannn.delibre.abstracts.AbstractHomeView;
+import com.github.alviannn.delibre.models.Book;
+import com.github.alviannn.delibre.models.Borrow;
+import com.github.alviannn.delibre.models.User;
 import com.github.alviannn.delibre.sql.Database;
 import com.github.alviannn.delibre.util.Utils;
 import com.github.alviannn.delibre.views.AdminHomeView;
@@ -83,12 +86,24 @@ public class AdminHomeController extends AbstractHomeController {
             });
         }
 
-        view.sortTypeField.addActionListener(e -> {
-            String item = (String) view.sortTypeField.getSelectedItem();
-        });
-
         view.categoryField.addActionListener(e -> {
             String item = (String) view.categoryField.getSelectedItem();
+            boolean canSearch = true;
+
+            switch (view.currentSection) {
+                case AbstractHomeView.BOOK:
+                    canSearch = Book.Field.fromName(item).isSearchable();
+                    break;
+                case AbstractHomeView.USER:
+                    canSearch = User.Field.fromName(item).isSearchable();
+                    break;
+                case AbstractHomeView.BORROWED:
+                    canSearch = Borrow.Field.fromName(item).isSearchable();
+                    break;
+            }
+
+            view.searchField.setText("");
+            view.searchField.setEnabled(canSearch);
         });
 
         view.searchBtn.addActionListener(e -> this.refreshTable(view));

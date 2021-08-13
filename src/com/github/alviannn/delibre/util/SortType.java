@@ -14,7 +14,7 @@ public enum SortType {
     }
 
     public String makeQuery(String column) {
-        return " ORDER BY " + column + " " + key;
+        return "ORDER BY " + column + " " + key;
     }
 
     public static String[] getNames() {

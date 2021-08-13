@@ -37,8 +37,11 @@ public abstract class AbstractHomeSection {
         view.changeFilterSection();
         this.makeDetails();
 
-        // disable button
+        // disable section button (ex: Book, User, Borrowed Books button)
         mainBtn.setEnabled(false);
+        // disable search field (from filter section)
+        // because the default category isn't searchable (which is an ID)
+        view.searchField.setEnabled(false);
     }
 
     /**

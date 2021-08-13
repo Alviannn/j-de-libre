@@ -33,7 +33,7 @@ public abstract class AbstractHomeController extends AbstractController {
                 model = new DefaultTableModel(Book.Field.getFieldNames(), 0);
                 String column = Book.Field.fromName(categoryItem).getColumn();
 
-                List<Book> books = helper.getAllBooks(currentSort, column);
+                List<Book> books = helper.getAllBooks(currentSort, column, view.searchField.getText());
 
                 for (Book book : books) {
                     model.addRow(new Object[]{
@@ -47,7 +47,7 @@ public abstract class AbstractHomeController extends AbstractController {
                 model = new DefaultTableModel(User.Field.getFieldNames(), 0);
                 String column = User.Field.fromName(categoryItem).getColumn();
 
-                List<User> users = helper.getAllUsers(currentSort, column);
+                List<User> users = helper.getAllUsers(currentSort, column, view.searchField.getText());
 
                 for (User user : users) {
                     model.addRow(new Object[]{
@@ -61,7 +61,7 @@ public abstract class AbstractHomeController extends AbstractController {
                 model = new DefaultTableModel(Borrow.Field.getFieldNames(), 0);
                 String column = Borrow.Field.fromName(categoryItem).getColumn();
 
-                List<Borrow> borrows = helper.getAllBorrowed(currentSort, column);
+                List<Borrow> borrows = helper.getAllBorrowed(currentSort, column, view.searchField.getText());
 
                 for (Borrow borrow : borrows) {
                     model.addRow(new Object[]{
@@ -79,7 +79,10 @@ public abstract class AbstractHomeController extends AbstractController {
         }
 
         assert model != null;
+
         view.table.setModel(model);
+        // possibly filled, therefore we're clearing it to reset the search
+        view.searchField.setText("");
     }
 
     /**

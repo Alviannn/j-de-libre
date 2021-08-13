@@ -25,6 +25,29 @@ public class ModelHelper {
 
     // ---------------------------------------------------------------------------------------------- //
 
+    private Results wrappedResults(String table, String sortQuery, String column, String filterValue) throws SQLException {
+        String query = "SELECT * FROM %s%s %s;";
+        String conditionalQuery = " WHERE " + column + " LIKE ?";
+
+        if (table.equals("borrows")) {
+            query = "SELECT borrows.*, users.name AS username, books.title AS title FROM borrows "
+                    + "JOIN users ON borrows.userId = users.id "
+                    + "JOIN books ON borrows.bookId = books.id%s %s;";
+
+            if (filterValue.isEmpty()) {
+                return db.results(String.format(query, "", sortQuery));
+            } else {
+                return db.results(String.format(query, conditionalQuery, sortQuery), "%" + filterValue + "%");
+            }
+        } else {
+            if (filterValue.isEmpty()) {
+                return db.results(String.format(query, table, "", sortQuery));
+            } else {
+                return db.results(String.format(query, table, conditionalQuery, sortQuery), "%" + filterValue + "%");
+            }
+        }
+    }
+
     /**
      * Tries to find a user within the database
      *
@@ -56,11 +79,11 @@ public class ModelHelper {
 
     // ---------------------------------------------------------------------------------------------- //
 
-    public List<User> getAllUsers(SortType sort, String field) {
+    public List<User> getAllUsers(SortType sort, String column, String filter) {
         List<User> users = new ArrayList<>();
-        String sortQuery = sort.makeQuery(field);
+        String sortQuery = sort.makeQuery(column);
 
-        try (Results res = db.results("SELECT * FROM users" + sortQuery + ";")) {
+        try (Results res = this.wrappedResults("users", sortQuery, column, filter)) {
             ResultSet rs = res.getResultSet();
             while (rs.next()) {
                 User user = new User(
@@ -79,11 +102,11 @@ public class ModelHelper {
         return users;
     }
 
-    public List<Book> getAllBooks(SortType sort, String field) {
+    public List<Book> getAllBooks(SortType sort, String column, String filter) {
         List<Book> books = new ArrayList<>();
-        String sortQuery = sort.makeQuery(field);
+        String sortQuery = sort.makeQuery(column);
 
-        try (Results res = db.results("SELECT * FROM books" + sortQuery + ";")) {
+        try (Results res = this.wrappedResults("books", sortQuery, column, filter)) {
             ResultSet rs = res.getResultSet();
             while (rs.next()) {
                 Book book = new Book(rs.getInt("id"),
@@ -101,15 +124,11 @@ public class ModelHelper {
         return books;
     }
 
-    public List<Borrow> getAllBorrowed(SortType sort, String field) {
+    public List<Borrow> getAllBorrowed(SortType sort, String column, String filter) {
         List<Borrow> borrows = new ArrayList<>();
-        String sortQuery = sort.makeQuery(field);
+        String sortQuery = sort.makeQuery(column);
 
-        try (Results results = db.results(
-                "SELECT borrows.*, users.name AS username, books.title AS title FROM borrows "
-                + "JOIN users ON borrows.userId = users.id "
-                + "JOIN books ON borrows.bookId = books.id" + sortQuery + ";")) {
-
+        try (Results results = this.wrappedResults("borrows", sortQuery, column, filter)) {
             ResultSet rs = results.getResultSet();
             while (rs.next()) {
                 Borrow borrow = new Borrow(
