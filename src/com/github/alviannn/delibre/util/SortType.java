@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 public enum SortType {
 
-    NONE(null),
     ASCENDING("ASC"),
     DESCENDING("DESC");
 
@@ -15,9 +14,6 @@ public enum SortType {
     }
 
     public String makeQuery(String column) {
-        if (key == null) {
-            return "";
-        }
         return " ORDER BY " + column + " " + key;
     }
 

@@ -91,6 +91,8 @@ public class AdminHomeController extends AbstractHomeController {
             String item = (String) view.categoryField.getSelectedItem();
         });
 
+        view.searchBtn.addActionListener(e -> this.refreshTable(view));
+
         view.bookSection.deleteBtn.addActionListener(e -> this.deleteSectionItemAction(view, AbstractHomeView.BOOK));
         view.userSection.deleteBtn.addActionListener(e -> this.deleteSectionItemAction(view, AbstractHomeView.USER));
         view.borrowedSection.deleteBtn.addActionListener(e -> this.deleteSectionItemAction(view, AbstractHomeView.BORROWED));

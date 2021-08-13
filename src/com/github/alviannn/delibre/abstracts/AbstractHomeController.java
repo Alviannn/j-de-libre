@@ -26,10 +26,7 @@ public abstract class AbstractHomeController extends AbstractController {
         String sortItem = (String) view.sortTypeField.getSelectedItem();
         String categoryItem = (String) view.categoryField.getSelectedItem();
 
-        SortType currentSort = SortType.NONE;
-        if (sortItem != null) {
-            currentSort = SortType.valueOf(sortItem);
-        }
+        SortType currentSort = SortType.valueOf(sortItem);
 
         switch (view.currentSection) {
             case AbstractHomeView.BOOK: {

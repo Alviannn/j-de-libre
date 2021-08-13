@@ -42,7 +42,7 @@ public class Book {
         TITLE("Title", "title", true),
         AUTHOR("Author", "author", true),
         YEAR("Year", "year", false),
-        PAGE_COUNT("Page", "page", false);
+        PAGE_COUNT("Page", "pageCount", false);
 
         private final String name, column;
         private final boolean searchable;
