@@ -25,6 +25,26 @@ public class ModelHelper {
 
     // ---------------------------------------------------------------------------------------------- //
 
+    /**
+     * Wraps the SQL result query to make shorter code
+     * <br><br>
+     * Okay, but why is it really needed? Because to make the filter section works
+     * it needs {@code SortTypes} and {@code Categories}. To do that we need to insert some additional queries
+     * <br><br>
+     * Those required additional queries are:
+     * <ol>
+     *     <li>For sorting (ex: {@code ORDER BY column ASC})</li>
+     *     <li>For searching (ex: {@code WHERE column LIKE ?})</li>
+     * </ol>
+     * <br><br>
+     * And by using this we can insert those additional queries to all {@code SELECT} queries.
+     *
+     * @param table       the selected table
+     * @param sortQuery   the additional sort query (could be weird for you, but I made the queries somewhere)
+     * @param column      the selected column (for either sort or search)
+     * @param filterValue the search value (for filtering)
+     * @see Database#results
+     */
     private Results wrappedResults(String table, String sortQuery, String column, String filterValue) throws SQLException {
         String query = "SELECT * FROM %s%s %s;";
         String conditionalQuery = " WHERE " + column + " LIKE ?";
