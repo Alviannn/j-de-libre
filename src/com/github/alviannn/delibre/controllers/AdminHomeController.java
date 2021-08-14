@@ -79,11 +79,9 @@ public class AdminHomeController extends AbstractHomeController {
 
         // combined to an array and loop it to simplify codes
         AbstractHomeSection[] sectionArr = {view.bookSection, view.userSection, view.borrowedSection};
+        // insert action to clear button (to all sections)
         for (AbstractHomeSection section : sectionArr) {
-            section.clearBtn.addActionListener(e -> {
-                section.clearDetailsFields();
-                table.clearSelection();
-            });
+            section.clearBtn.addActionListener(e -> view.clearSelection());
         }
 
         view.categoryField.addActionListener(e -> {
@@ -112,6 +110,31 @@ public class AdminHomeController extends AbstractHomeController {
         view.userSection.deleteBtn.addActionListener(e -> this.deleteSectionItemAction(view, AbstractHomeView.USER));
         view.borrowedSection.deleteBtn.addActionListener(e -> this.deleteSectionItemAction(view, AbstractHomeView.BORROWED));
 
+        view.bookSection.insertBtn.addActionListener(e -> {
+            ModelHelper helper = main.getModelHelper();
+            AdminBookSection section = view.bookSection;
+
+            String title = "Insert Book";
+
+            if (!section.idField.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(view, "Please 'clear' the fields to insert a book!", title, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (!this.isBookFieldValid(view, section, title)) {
+                return;
+            }
+
+            helper.insertBook(
+                    section.titleField.getText(),
+                    section.authorField.getText(),
+                    Integer.parseInt(section.yearField.getText()),
+                    Integer.parseInt(section.pageField.getText())
+            );
+
+            view.clearSelection();
+            this.refreshTable(view);
+        });
+
         view.bookSection.saveBtn.addActionListener(e -> {
             Database db = main.getDB();
             AdminBookSection section = view.bookSection;
@@ -120,30 +143,23 @@ public class AdminHomeController extends AbstractHomeController {
             String idText = section.idField.getText();
 
             if (idText.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "No data was selected!", title, JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(view, "No data was selected!", title, JOptionPane.ERROR_MESSAGE);
                 return;
             }
-
-            String yearString = section.yearField.getText(),
-                    pageString = section.pageField.getText();
-
-            if (!Utils.isInt(yearString) || !Utils.isInt(pageString)) {
-                JOptionPane.showMessageDialog(null, "Year or Page field must be integer!", title, JOptionPane.ERROR_MESSAGE);
+            if (!this.isBookFieldValid(view, section, title)) {
                 return;
             }
 
             try {
                 db.query("UPDATE books SET title = ?, author = ?, year = ?, pageCount = ? WHERE id = ?;",
                         section.titleField.getText(), section.authorField.getText(),
-                        yearString, pageString,
+                        section.yearField.getText(), section.pageField.getText(),
                         section.idField.getText());
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
 
-            section.clearDetailsFields();
-            table.clearSelection();
-
+            view.clearSelection();
             this.refreshTable(view);
         });
 
@@ -184,7 +200,7 @@ public class AdminHomeController extends AbstractHomeController {
         }
 
         if (idString.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "No data was selected!", title, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(view, "No data was selected!", title, JOptionPane.ERROR_MESSAGE);
         } else {
             int id = Integer.parseInt(idString);
             switch (type) {
@@ -201,13 +217,37 @@ public class AdminHomeController extends AbstractHomeController {
                     throw new IllegalStateException("Unexpected value: " + type);
             }
 
-            JOptionPane.showMessageDialog(null, "Successfully deleted the data!", title, JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(view, "Successfully deleted the data!", title, JOptionPane.INFORMATION_MESSAGE);
         }
 
         view.getSection(type).clearDetailsFields();
         view.table.clearSelection();
 
         this.refreshTable(view);
+    }
+
+    private boolean isBookFieldValid(AdminHomeView view, AdminBookSection section, String dialogTitle) {
+        String yearText = section.yearField.getText(),
+                pageText = section.pageField.getText();
+
+        if (!Utils.isInt(yearText) || !Utils.isInt(pageText)) {
+            JOptionPane.showMessageDialog(view, "Year or Page must be integer!", dialogTitle, JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        String titleText = section.titleField.getText(),
+                authorText = section.authorField.getText();
+
+        if (titleText.isEmpty()) {
+            JOptionPane.showMessageDialog(view, "Title cannot be empty!");
+            return false;
+        }
+        if (authorText.isEmpty()) {
+            JOptionPane.showMessageDialog(view, "Author cannot be empty!");
+            return false;
+        }
+
+        return true;
     }
 
 }
