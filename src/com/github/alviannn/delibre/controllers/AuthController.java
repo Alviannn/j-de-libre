@@ -25,18 +25,18 @@ public class AuthController extends AbstractController {
             String pwd = view.pwdField.getText();
 
             if (name.isEmpty() || pwd.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Username or password cannot be empty!", title, JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(view, "Username or password cannot be empty!", title, JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             User found = helper.findUser(name);
             if (found == null) {
-                JOptionPane.showMessageDialog(null, "No user found!", title, JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(view, "No user found!", title, JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             if (found.getPassword().equals(pwd)) {
-                JOptionPane.showMessageDialog(null, "Successfully logged in!", title, JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(view, "Successfully logged in!", title, JOptionPane.INFORMATION_MESSAGE);
                 view.dispose();
 
                 main.setCurrentUser(found);
@@ -46,7 +46,7 @@ public class AuthController extends AbstractController {
                     main.getUserController().showView();
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Username or password does not match!", title, JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(view, "Username or password does not match!", title, JOptionPane.ERROR_MESSAGE);
             }
         });
 
