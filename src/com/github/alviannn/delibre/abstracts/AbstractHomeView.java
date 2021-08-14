@@ -45,7 +45,9 @@ public abstract class AbstractHomeView extends AbstractView {
      * Gets the currently applied section object from the home view
      */
     @NotNull
-    public abstract AbstractHomeSection getAppliedSection();
+    public AbstractHomeSection getAppliedSection() {
+        return this.getSection(currentSection);
+    }
 
     /**
      * Gets the specified section object
@@ -209,6 +211,14 @@ public abstract class AbstractHomeView extends AbstractView {
 
         this.add(this.buildMenuSection(), BorderLayout.WEST);
         this.add(Utils.marginWrap(center, 5, 0, 5, 5), BorderLayout.CENTER);
+    }
+
+    /**
+     * Clears the currently selected data on the home view (usually from the table selection)
+     */
+    public void clearSelection() {
+        this.getAppliedSection().clearDetailsFields();
+        table.clearSelection();
     }
 
 }

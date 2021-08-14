@@ -11,18 +11,6 @@ public class UserHomeView extends AbstractHomeView {
     public UserBorrowedSection borrowedSection;
 
     @Override
-    public AbstractHomeSection getAppliedSection() {
-        switch (currentSection) {
-            case BOOK:
-                return bookSection;
-            case BORROWED:
-                return borrowedSection;
-            default:
-                throw new IllegalStateException("Unexpected value: " + currentSection);
-        }
-    }
-
-    @Override
     public AbstractHomeSection getSection(int type) {
         switch (type) {
             case BOOK:
