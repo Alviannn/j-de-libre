@@ -8,7 +8,7 @@ import javax.swing.*;
 
 public class AdminBookSection extends AbstractHomeSection {
 
-    public JButton saveBtn, deleteBtn;
+    public JButton insertBtn, saveBtn, deleteBtn;
     public JTextField idField, titleField, authorField, yearField, pageField;
 
     public AdminBookSection(AdminHomeView view) {
@@ -21,6 +21,7 @@ public class AdminBookSection extends AbstractHomeSection {
         yearField = new JTextField();
         pageField = new JTextField();
 
+        insertBtn = new JButton("Insert");
         saveBtn = new JButton("Save");
         deleteBtn = new JButton("Delete");
     }
@@ -68,12 +69,14 @@ public class AdminBookSection extends AbstractHomeSection {
         details.add(pageField);
 
         int btnWidth = 130;
-        int btnCenter = (695 - btnWidth) / 2;
         int btnGap = 10;
-        saveBtn.setBounds(btnCenter - btnWidth - btnGap, 160, btnWidth, 40);
-        deleteBtn.setBounds(btnCenter, 160, 130, 40);
-        clearBtn.setBounds(btnCenter + btnWidth + btnGap, 160, btnWidth, 40);
 
+        insertBtn.setBounds(202 - btnWidth, 160, btnWidth, 40);
+        saveBtn.setBounds(202 + btnGap, 160, btnWidth, 40);
+        deleteBtn.setBounds(202 + btnWidth + (btnGap * 2), 160, 130, 40);
+        clearBtn.setBounds(202 + (btnWidth * 2) + (btnGap * 3), 160, btnWidth, 40);
+
+        details.add(insertBtn);
         details.add(saveBtn);
         details.add(deleteBtn);
         details.add(clearBtn);
