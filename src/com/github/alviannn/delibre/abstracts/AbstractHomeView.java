@@ -115,10 +115,7 @@ public abstract class AbstractHomeView extends AbstractView {
      * Changes the stuff related to each section (in this case the {@link #categoryField} and {@link #searchField})
      */
     public void changeFilterSection() {
-        JComboBox<String> category = categoryField;
-
         this.clearFilterSection();
-        categoryField.removeAllItems();
 
         String[] names;
         switch (currentSection) {
@@ -135,9 +132,8 @@ public abstract class AbstractHomeView extends AbstractView {
                 throw new IllegalStateException("Unexpected value: " + currentSection);
         }
 
-        for (String name : names) {
-            category.addItem(name);
-        }
+        // replaces all category options with the new related section
+        categoryField.setModel(new DefaultComboBoxModel<>(names));
 
         // could be disabled from borrowed book section
         // therefore, I'm re-enabling it here just in-case it's disabled
