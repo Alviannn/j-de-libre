@@ -8,6 +8,7 @@ import com.github.alviannn.delibre.models.Book;
 import com.github.alviannn.delibre.models.Borrow;
 import com.github.alviannn.delibre.models.User;
 import com.github.alviannn.delibre.sql.Database;
+import com.github.alviannn.delibre.sql.Results;
 import com.github.alviannn.delibre.util.Utils;
 import com.github.alviannn.delibre.views.AdminHomeView;
 import com.github.alviannn.delibre.views.admin.AdminBookSection;
@@ -17,6 +18,7 @@ import com.github.alviannn.delibre.views.admin.AdminUserSection;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class AdminHomeController extends AbstractHomeController {
@@ -124,9 +126,17 @@ public class AdminHomeController extends AbstractHomeController {
                 return;
             }
 
+            String titleText = section.titleField.getText();
+            String authorText = section.authorField.getText();
+
+            if (helper.doesBookExists(titleText, authorText)) {
+                JOptionPane.showMessageDialog(view, "This book is already registered!", title, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             helper.insertBook(
-                    section.titleField.getText(),
-                    section.authorField.getText(),
+                    titleText,
+                    authorText,
                     Integer.parseInt(section.yearField.getText()),
                     Integer.parseInt(section.pageField.getText())
             );

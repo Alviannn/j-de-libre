@@ -97,6 +97,24 @@ public class ModelHelper {
         return null;
     }
 
+    /**
+     * Determines if a book is already registered to the DB.
+     * A book is determined as already registered if both title and author is in the database.
+     *
+     * @param title the book title
+     * @param author the book author
+     * @return true if book is already registered, false is otherwise
+     */
+    public boolean doesBookExists(String title, String author) {
+        try (Results res = db.results("SELECT * FROM books WHERE title = ? AND author = ?;", title, author)) {
+            ResultSet rs = res.getResultSet();
+            return rs.next();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     // ---------------------------------------------------------------------------------------------- //
 
     public List<User> getAllUsers(SortType sort, String column, String filter) {
