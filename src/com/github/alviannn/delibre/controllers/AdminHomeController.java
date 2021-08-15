@@ -8,7 +8,6 @@ import com.github.alviannn.delibre.models.Book;
 import com.github.alviannn.delibre.models.Borrow;
 import com.github.alviannn.delibre.models.User;
 import com.github.alviannn.delibre.sql.Database;
-import com.github.alviannn.delibre.sql.Results;
 import com.github.alviannn.delibre.util.Utils;
 import com.github.alviannn.delibre.views.AdminHomeView;
 import com.github.alviannn.delibre.views.admin.AdminBookSection;
@@ -18,7 +17,6 @@ import com.github.alviannn.delibre.views.admin.AdminUserSection;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class AdminHomeController extends AbstractHomeController {
@@ -149,7 +147,7 @@ public class AdminHomeController extends AbstractHomeController {
             Database db = main.getDB();
             AdminBookSection section = view.bookSection;
 
-            String title = "Saving Book";
+            String title = "Updating Book";
             String idText = section.idField.getText();
 
             if (idText.isEmpty()) {
@@ -190,29 +188,29 @@ public class AdminHomeController extends AbstractHomeController {
      */
     private void deleteSectionItemAction(AdminHomeView view, int type) {
         ModelHelper helper = main.getModelHelper();
-        String title, idString;
+        String title, idText;
 
         switch (type) {
             case AbstractHomeView.BOOK:
                 title = "Book Deletion";
-                idString = view.bookSection.idField.getText();
+                idText = view.bookSection.idField.getText();
                 break;
             case AbstractHomeView.USER:
                 title = "User Deletion";
-                idString = view.userSection.idField.getText();
+                idText = view.userSection.idField.getText();
                 break;
             case AbstractHomeView.BORROWED:
                 title = "Borrowed Book Deletion";
-                idString = view.borrowedSection.idField.getText();
+                idText = view.borrowedSection.idField.getText();
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + type);
         }
 
-        if (idString.isEmpty()) {
+        if (idText.isEmpty()) {
             JOptionPane.showMessageDialog(view, "No data was selected!", title, JOptionPane.ERROR_MESSAGE);
         } else {
-            int id = Integer.parseInt(idString);
+            int id = Integer.parseInt(idText);
             switch (type) {
                 case AbstractHomeView.BOOK:
                     helper.removeBook(id);

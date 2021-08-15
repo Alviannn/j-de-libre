@@ -17,9 +17,10 @@ public class Database {
     public void connect() {
         try {
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/delibre", "root", "");
-            System.out.println("Successfully connected to the DB!");
+//            System.out.println("Successfully connected to the DB!");
         } catch (Exception e) {
-            System.out.println("Connection failure to the DB!");
+//            System.out.println("Connection failure to the DB!");
+            e.printStackTrace();
         }
     }
 
