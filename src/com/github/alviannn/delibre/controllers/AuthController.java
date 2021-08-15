@@ -31,7 +31,7 @@ public class AuthController extends AbstractController {
 
             User found = helper.findUser(name);
             if (found == null) {
-                JOptionPane.showMessageDialog(view, "No user found!", title, JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(view, "Cannot find user with called '" + name + "'!", title, JOptionPane.ERROR_MESSAGE);
                 return;
             }
 

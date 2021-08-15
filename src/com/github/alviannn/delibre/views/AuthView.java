@@ -25,8 +25,7 @@ public class AuthView extends AbstractView {
         loginBtn = new JButton("Login");
         registerBtn = new JButton("Register");
 
-        JPanel formPanel = new JPanel();
-        formPanel.setLayout(new GridLayout(2, 2, -40, 10));
+        JPanel formPanel = new JPanel(new GridLayout(2, 2, -40, 10));
 
         formPanel.add(userLabel);
         formPanel.add(userField);
