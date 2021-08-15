@@ -11,7 +11,7 @@ public class AuthView extends AbstractView {
     public JTextField userField, pwdField;
 
     public AuthView() {
-        super(600, 600);
+        super(400, 500);
     }
 
     @Override
@@ -26,7 +26,7 @@ public class AuthView extends AbstractView {
         registerBtn = new JButton("Register");
 
         JPanel formPanel = new JPanel();
-        formPanel.setLayout(new GridLayout(2, 2, 0, 10));
+        formPanel.setLayout(new GridLayout(2, 2, -40, 10));
 
         formPanel.add(userLabel);
         formPanel.add(userField);
@@ -34,15 +34,15 @@ public class AuthView extends AbstractView {
         formPanel.add(pwdLabel);
         formPanel.add(pwdField);
 
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 40, 0));
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 0));
 
         buttonPanel.add(loginBtn);
         buttonPanel.add(registerBtn);
 
-        formPanel.setBorder(BorderFactory.createEmptyBorder(150, 70, 0, 70));
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 70, 180, 70));
+        formPanel.setBorder(BorderFactory.createEmptyBorder(120, 30, 0, 30));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(60, 50, 110, 50));
 
-        this.setLayout(new GridLayout(2, 0, 0, 90));
+        this.setLayout(new GridLayout(2, 1, 0, 20));
 
         this.add(formPanel);
         this.add(buttonPanel);
