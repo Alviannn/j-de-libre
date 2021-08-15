@@ -188,7 +188,7 @@ public abstract class AbstractHomeView extends AbstractView {
         };
 
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        JScrollPane scrollPane = new JScrollPane(table);
+        table.setFillsViewportHeight(true);
 
         detailsPanel = new JPanel(null);
         detailsPanel.setBorder(BorderFactory.createTitledBorder("Details"));
@@ -204,7 +204,7 @@ public abstract class AbstractHomeView extends AbstractView {
 
         JPanel center = new JPanel(new GridBagLayout());
         gbc.gridx = 0;
-        center.add(scrollPane, gbc);
+        center.add(new JScrollPane(table), gbc);
         gbc.ipady = 200;
         gbc.gridy = 1;
         center.add(bottomCenter, gbc);

@@ -141,6 +141,8 @@ public class AdminHomeController extends AbstractHomeController {
 
             view.clearSelection();
             this.refreshTable(view);
+
+            JOptionPane.showMessageDialog(view, "Successfully inserted a new book to the library!", title, JOptionPane.INFORMATION_MESSAGE);
         });
 
         view.bookSection.saveBtn.addActionListener(e -> {
@@ -162,13 +164,15 @@ public class AdminHomeController extends AbstractHomeController {
                 db.query("UPDATE books SET title = ?, author = ?, year = ?, pageCount = ? WHERE id = ?;",
                         section.titleField.getText(), section.authorField.getText(),
                         section.yearField.getText(), section.pageField.getText(),
-                        section.idField.getText());
+                        idText);
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
 
             view.clearSelection();
             this.refreshTable(view);
+
+            JOptionPane.showMessageDialog(view, "Successfully updated book " + idText + "!", title, JOptionPane.INFORMATION_MESSAGE);
         });
 
         view.logoutBtn.addActionListener(e -> {
@@ -235,16 +239,11 @@ public class AdminHomeController extends AbstractHomeController {
     }
 
     private boolean isBookFieldValid(AdminHomeView view, AdminBookSection section, String dialogTitle) {
-        String yearText = section.yearField.getText(),
-                pageText = section.pageField.getText();
-
-        if (!Utils.isInt(yearText) || !Utils.isInt(pageText)) {
-            JOptionPane.showMessageDialog(view, "Year or Page must be integer!", dialogTitle, JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
         String titleText = section.titleField.getText(),
                 authorText = section.authorField.getText();
+
+        String yearText = section.yearField.getText(),
+                pageText = section.pageField.getText();
 
         if (titleText.isEmpty()) {
             JOptionPane.showMessageDialog(view, "Title cannot be empty!");
@@ -252,6 +251,11 @@ public class AdminHomeController extends AbstractHomeController {
         }
         if (authorText.isEmpty()) {
             JOptionPane.showMessageDialog(view, "Author cannot be empty!");
+            return false;
+        }
+
+        if (!Utils.isInt(yearText) || !Utils.isInt(pageText)) {
+            JOptionPane.showMessageDialog(view, "Year or Page must be integer!", dialogTitle, JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
