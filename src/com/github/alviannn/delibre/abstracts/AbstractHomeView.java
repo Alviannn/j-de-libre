@@ -23,7 +23,7 @@ public abstract class AbstractHomeView extends AbstractView {
 
     public JButton booksBtn, usersBtn, borrowedBtn, logoutBtn;
     public JTable table;
-    public JPanel detailsPanel;
+    public JPanel menuPanel, detailsPanel;
 
     public JComboBox<String> categoryField, sortTypeField;
     public JTextField searchField;
@@ -147,8 +147,8 @@ public abstract class AbstractHomeView extends AbstractView {
      * This is where user can select which section they want to be in
      */
     private JPanel buildMenuSection() {
-        JPanel menu = new JPanel(new GridLayout(2, 0));
-        menu.setBorder(BorderFactory.createTitledBorder("Menu"));
+        menuPanel = new JPanel(new GridLayout(2, 0));
+        menuPanel.setBorder(BorderFactory.createTitledBorder("Menu"));
 
         JPanel first = new JPanel(new GridLayout(3, 0, 20, 20));
         JPanel second = new JPanel(new GridLayout(1, 0, 20, 20));
@@ -162,10 +162,10 @@ public abstract class AbstractHomeView extends AbstractView {
 
         second.add(logoutBtn);
 
-        menu.add(first);
-        menu.add(second);
+        menuPanel.add(first);
+        menuPanel.add(second);
 
-        return Utils.marginWrap(menu, 5);
+        return Utils.marginWrap(menuPanel, 5);
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.github.alviannn.delibre.controllers;
 import com.github.alviannn.delibre.Main;
 import com.github.alviannn.delibre.abstracts.AbstractHomeController;
 import com.github.alviannn.delibre.abstracts.AbstractHomeView;
-import com.github.alviannn.delibre.sql.Database;
 import com.github.alviannn.delibre.views.UserHomeView;
 
 public class UserHomeController extends AbstractHomeController {
@@ -14,9 +13,6 @@ public class UserHomeController extends AbstractHomeController {
 
     @Override
     public void showView() {
-        ModelHelper helper = main.getModelHelper();
-        Database db = main.getDB();
-
         UserHomeView view = new UserHomeView();
         view.setVisible(true);
 

@@ -5,6 +5,8 @@ import com.github.alviannn.delibre.abstracts.AbstractHomeView;
 import com.github.alviannn.delibre.views.user.UserBookSection;
 import com.github.alviannn.delibre.views.user.UserBorrowedSection;
 
+import javax.swing.*;
+
 public class UserHomeView extends AbstractHomeView {
 
     public UserBookSection bookSection;
@@ -27,6 +29,9 @@ public class UserHomeView extends AbstractHomeView {
         super.buildFrame();
 
         this.setTitle("De Libre - User");
+
+        JPanel firstPanel = (JPanel) menuPanel.getComponents()[0];
+        firstPanel.remove(usersBtn);
 
         bookSection = new UserBookSection(this);
         borrowedSection = new UserBorrowedSection(this);
