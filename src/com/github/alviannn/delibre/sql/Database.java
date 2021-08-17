@@ -14,14 +14,8 @@ public class Database {
     /**
      * Handles opening a connection to the database (default values are hardcoded)
      */
-    public void connect() {
-        try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/delibre", "root", "");
-//            System.out.println("Successfully connected to the DB!");
-        } catch (Exception e) {
-//            System.out.println("Connection failure to the DB!");
-            e.printStackTrace();
-        }
+    public void connect() throws SQLException {
+        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/delibre", "root", "");
     }
 
     public Connection getConnection() {

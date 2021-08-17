@@ -9,8 +9,6 @@ import com.github.alviannn.delibre.models.User;
 import com.github.alviannn.delibre.sql.Database;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.sql.SQLException;
 
 public class Main {
 
@@ -23,11 +21,12 @@ public class Main {
 
     public Main() {
         this.db = new Database();
-        db.connect();
 
         try {
+            db.connect();
+            // execute the SQL initialization
             db.query(new File("init.sql"));
-        } catch (FileNotFoundException | SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

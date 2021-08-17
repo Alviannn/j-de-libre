@@ -19,6 +19,12 @@ public class AuthController extends AbstractController {
         AuthView view = new AuthView();
         view.setVisible(true);
 
+        if (main.getDB().getConnection() == null) {
+            JOptionPane.showMessageDialog(view, "Failed to connect to the database", "Database Error", JOptionPane.ERROR_MESSAGE);
+            view.dispose();
+            return;
+        }
+
         view.loginBtn.addActionListener(e -> {
             String title = "Login";
             String name = view.userField.getText();
