@@ -49,23 +49,23 @@ public class Borrow {
     }
 
     public enum Field {
-        ID("ID", "id"),
-        USER_ID("User ID", "userId"),
-        BOOK_ID("Book ID", "bookId"),
+        ID("ID", "id", false),
+        USER_ID("User ID", "userId", false),
+        BOOK_ID("Book ID", "bookId", false),
 
-        BORROW_DATE("Borrow Date", "borrowDate"),
-        DUE_DATE("Due Date", "dueDate"),
+        BORROW_DATE("Borrow Date", "borrowDate", false),
+        DUE_DATE("Due Date", "dueDate", false),
 
-        USERNAME("Username", "user.name"),
-        BOOK_TITLE("Book Title", "book.title");
+        USERNAME("Username", "user.name", true),
+        BOOK_TITLE("Book Title", "book.title", true);
 
         private final String name, column;
         private final boolean searchable;
 
-        Field(String name, String column) {
+        Field(String name, String column, boolean searchable) {
             this.name = name;
             this.column = column;
-            this.searchable = false;
+            this.searchable = searchable;
         }
 
         public String getName() {

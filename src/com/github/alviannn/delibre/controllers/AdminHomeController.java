@@ -2,11 +2,7 @@ package com.github.alviannn.delibre.controllers;
 
 import com.github.alviannn.delibre.Main;
 import com.github.alviannn.delibre.abstracts.AbstractHomeController;
-import com.github.alviannn.delibre.abstracts.AbstractHomeSection;
 import com.github.alviannn.delibre.abstracts.AbstractHomeView;
-import com.github.alviannn.delibre.models.Book;
-import com.github.alviannn.delibre.models.Borrow;
-import com.github.alviannn.delibre.models.User;
 import com.github.alviannn.delibre.sql.Database;
 import com.github.alviannn.delibre.util.Utils;
 import com.github.alviannn.delibre.views.AdminHomeView;
@@ -77,33 +73,8 @@ public class AdminHomeController extends AbstractHomeController {
             }
         });
 
-        // combined to an array and loop it to simplify codes
-        AbstractHomeSection[] sectionArr = {view.bookSection, view.userSection, view.borrowedSection};
-        // insert action to clear button (to all sections)
-        for (AbstractHomeSection section : sectionArr) {
-            section.clearBtn.addActionListener(e -> view.clearSelection());
-        }
-
-        view.categoryField.addActionListener(e -> {
-            String item = (String) view.categoryField.getSelectedItem();
-            boolean canSearch = true;
-
-            switch (view.currentSection) {
-                case AbstractHomeView.BOOK:
-                    canSearch = Book.Field.fromName(item).isSearchable();
-                    break;
-                case AbstractHomeView.USER:
-                    canSearch = User.Field.fromName(item).isSearchable();
-                    break;
-                case AbstractHomeView.BORROWED:
-                    canSearch = Borrow.Field.fromName(item).isSearchable();
-                    break;
-            }
-
-            view.searchField.setText("");
-            view.searchField.setEnabled(canSearch);
-        });
-
+        this.useClearAction(view);
+        this.useCategorySelectAction(view);
         view.searchBtn.addActionListener(e -> this.refreshTable(view));
 
         view.bookSection.deleteBtn.addActionListener(e -> this.deleteSectionItemAction(view, AbstractHomeView.BOOK));

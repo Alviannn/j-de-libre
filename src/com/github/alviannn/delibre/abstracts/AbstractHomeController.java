@@ -17,6 +17,12 @@ public abstract class AbstractHomeController extends AbstractController {
         super(main);
     }
 
+    /**
+     * Refreshes the data table on either user or admin home view
+     * This will also handle the sort and search functionality
+     *
+     * @param view the targeted view
+     */
     protected void refreshTable(AbstractHomeView view) {
         DefaultTableModel model = null;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -25,7 +31,6 @@ public abstract class AbstractHomeController extends AbstractController {
 
         String sortItem = (String) view.sortTypeField.getSelectedItem();
         String categoryItem = (String) view.categoryField.getSelectedItem();
-
         SortType currentSort = SortType.valueOf(sortItem);
 
         switch (view.currentSection) {
@@ -83,6 +88,41 @@ public abstract class AbstractHomeController extends AbstractController {
         view.table.setModel(model);
         // possibly filled, therefore we're clearing it to reset the search
         view.searchField.setText("");
+    }
+
+    protected void useCategorySelectAction(AbstractHomeView view) {
+        view.categoryField.addActionListener(e -> {
+            String item = (String) view.categoryField.getSelectedItem();
+            boolean canSearch;
+
+            switch (view.currentSection) {
+                case AbstractHomeView.BOOK:
+                    canSearch = Book.Field.fromName(item).isSearchable();
+                    break;
+                case AbstractHomeView.USER:
+                    canSearch = User.Field.fromName(item).isSearchable();
+                    break;
+                case AbstractHomeView.BORROWED:
+                    canSearch = Borrow.Field.fromName(item).isSearchable();
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + view.currentSection);
+            }
+
+            view.searchField.setText("");
+            view.searchField.setEnabled(canSearch);
+        });
+    }
+
+    protected void useClearAction(AbstractHomeView view) {
+        for (int i = AbstractHomeView.BOOK; i <= AbstractHomeView.BORROWED; i++) {
+            try {
+                AbstractHomeSection section = view.getSection(i);
+                section.clearBtn.addActionListener(e -> view.clearSelection());
+            } catch (Exception ignored) {
+                // error could occur since user view doesn't allow getting User section (it doesn't exist)
+            }
+        }
     }
 
     /**
