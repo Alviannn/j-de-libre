@@ -75,6 +75,8 @@ public class AdminHomeController extends AbstractHomeController {
 
         this.useClearAction(view);
         this.useCategorySelectAction(view);
+        this.useLogoutAction(view);
+
         view.searchBtn.addActionListener(e -> this.refreshTable(view));
 
         view.bookSection.deleteBtn.addActionListener(e -> this.deleteSectionItemAction(view, AbstractHomeView.BOOK));
@@ -144,12 +146,6 @@ public class AdminHomeController extends AbstractHomeController {
             this.refreshTable(view);
 
             JOptionPane.showMessageDialog(view, "Successfully updated book " + idText + "!", title, JOptionPane.INFORMATION_MESSAGE);
-        });
-
-        view.logoutBtn.addActionListener(e -> {
-            view.dispose();
-            main.setCurrentUser(null);
-            main.getAuthController().showView();
         });
 
         this.refreshTable(view);

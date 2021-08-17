@@ -125,6 +125,14 @@ public abstract class AbstractHomeController extends AbstractController {
         }
     }
 
+    protected void useLogoutAction(AbstractHomeView view) {
+        view.logoutBtn.addActionListener(e -> {
+            view.dispose();
+            main.setCurrentUser(null);
+            main.getAuthController().showView();
+        });
+    }
+
     /**
      * Action that changes currently applied section to another section
      * <p>

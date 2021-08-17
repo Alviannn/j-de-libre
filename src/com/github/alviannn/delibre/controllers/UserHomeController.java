@@ -62,9 +62,9 @@ public class UserHomeController extends AbstractHomeController {
 
         this.useClearAction(view);
         this.useCategorySelectAction(view);
+        this.useLogoutAction(view);
 
         view.searchBtn.addActionListener(e -> this.refreshTable(view));
-
         this.refreshTable(view);
     }
 
