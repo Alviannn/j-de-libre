@@ -3,6 +3,7 @@ package com.github.alviannn.delibre.controllers;
 import com.github.alviannn.delibre.Main;
 import com.github.alviannn.delibre.abstracts.AbstractHomeController;
 import com.github.alviannn.delibre.abstracts.AbstractHomeView;
+import com.github.alviannn.delibre.models.User;
 import com.github.alviannn.delibre.views.UserHomeView;
 import com.github.alviannn.delibre.views.user.UserBookSection;
 import com.github.alviannn.delibre.views.user.UserBorrowedSection;
@@ -65,6 +66,29 @@ public class UserHomeController extends AbstractHomeController {
         this.useLogoutAction(view);
 
         view.searchBtn.addActionListener(e -> this.refreshTable(view));
+
+        view.bookSection.borrowBtn.addActionListener(e -> {
+            User user = main.getCurrentUser();
+            ModelHelper helper = main.getModelHelper();
+
+            String idText = view.bookSection.idField.getText();
+            String title = "Borrowing Book";
+
+            if (idText.isEmpty()) {
+                JOptionPane.showMessageDialog(view, "No data was selected!", title, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            int bookId = Integer.parseInt(idText);
+            if (helper.isBookBorrowed(user.getId(), bookId)) {
+                JOptionPane.showMessageDialog(view, "You have already borrowed this book!", title, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            helper.borrowBook(user.getId(), bookId);
+            JOptionPane.showMessageDialog(view, "Successfully borrowed a new book!", title, JOptionPane.PLAIN_MESSAGE);
+        });
+
         this.refreshTable(view);
     }
 

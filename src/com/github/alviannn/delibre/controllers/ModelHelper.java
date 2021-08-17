@@ -36,8 +36,9 @@ public class ModelHelper {
      *     <li>For sorting (ex: {@code ORDER BY column ASC})</li>
      *     <li>For searching (ex: {@code WHERE column LIKE ?})</li>
      * </ol>
-     * <br><br>
-     * And by using this we can insert those additional queries to all {@code SELECT} queries.
+     * <br>
+     * And by using this we can insert those additional queries to all {@code SELECT} queries and make our code shorter
+     * since we're going to use it repeatedly anyways.
      *
      * @param table       the selected table
      * @param sortQuery   the additional sort query (could be weird for you, but I made the queries somewhere)
@@ -107,6 +108,23 @@ public class ModelHelper {
      */
     public boolean doesBookExists(String title, String author) {
         try (Results res = db.results("SELECT * FROM books WHERE title = ? AND author = ?;", title, author)) {
+            ResultSet rs = res.getResultSet();
+            return rs.next();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * Determines if a user already borrowed a book
+     *
+     * @param userId the user id
+     * @param bookId the book id
+     * @return true if the user already borrowed the book, false is otherwise
+     */
+    public boolean isBookBorrowed(int userId, int bookId) {
+        try (Results res = db.results("SELECT * FROM borrows WHERE userId = ? AND bookId = ?;", userId, bookId)) {
             ResultSet rs = res.getResultSet();
             return rs.next();
         } catch (Exception e) {
@@ -207,7 +225,7 @@ public class ModelHelper {
         }
     }
 
-    public void borrowBook(User user, Book book) {
+    public void borrowBook(int userId, int bookId) {
         long millis = System.currentTimeMillis();
 
         Date curDate = new Date(millis);
@@ -215,7 +233,7 @@ public class ModelHelper {
 
         try {
             db.query("INSERT INTO borrows (userId, bookId, borrowDate, dueDate) VALUES (?, ?, ?, ?);",
-                    user.getId(), book.getId(), curDate, dueDate);
+                    userId, bookId, curDate, dueDate);
         } catch (Exception e) {
             e.printStackTrace();
         }
