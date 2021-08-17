@@ -30,6 +30,8 @@ public class UserHomeView extends AbstractHomeView {
 
         this.setTitle("De Libre - User");
 
+        // remove 'Users' button from the menu panel because the user view won't have any use for it
+        // probably going to change it later if I'm going to add a "change password" feature.
         JPanel firstPanel = (JPanel) menuPanel.getComponents()[0];
         firstPanel.remove(usersBtn);
 
