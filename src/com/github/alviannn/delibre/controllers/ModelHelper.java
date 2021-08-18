@@ -19,6 +19,14 @@ public class ModelHelper {
 
     private final Database db;
 
+    private final String BOOK_SELECT_QUERY = "SELECT * FROM books";
+    private final String USER_SELECT_QUERY = "SELECT * FROM users";
+    private final String BORROW_SELECT_QUERY = "SELECT" +
+                                               " borrows.*, users.name AS username, books.title AS title " +
+                                               "FROM borrows" +
+                                               " JOIN users ON borrows.userId = users.id" +
+                                               " JOIN books ON borrows.bookId = books.id";
+
     public ModelHelper(Database db) {
         this.db = db;
     }
@@ -40,33 +48,43 @@ public class ModelHelper {
      * And by using this we can insert those additional queries to all {@code SELECT} queries and make our code shorter
      * since we're going to use it repeatedly anyways.
      *
-     * @param table       the selected table
-     * @param sortQuery   the additional sort query (could be weird for you, but I made the queries somewhere)
-     * @param column      the selected column (for either sort or search)
-     * @param filterValue the search value (for filtering)
+     * @param modelName   the selected model name (later will pick the query either
+     *                    {@link #BOOK_SELECT_QUERY} or
+     *                    {@link #USER_SELECT_QUERY} or
+     *                    {@link #BORROW_SELECT_QUERY})
+     * @param sortQuery   the additional sort query (for sorting purpose)
+     * @param column      the selected column or field (for either sort or search)
+     * @param filterValue the search value from the search field (for filtering through the DB)
      * @see Database#results
      */
-    private Results wrappedResults(String table, String sortQuery, String column, String filterValue) throws SQLException {
-        String query = "SELECT * FROM %s%s %s;";
+    private Results wrappedResults(String modelName, String sortQuery, String column, String filterValue) throws SQLException {
         String conditionalQuery = " WHERE " + column + " LIKE ?";
 
-        if (table.equals("borrows")) {
-            query = "SELECT borrows.*, users.name AS username, books.title AS title FROM borrows "
-                    + "JOIN users ON borrows.userId = users.id "
-                    + "JOIN books ON borrows.bookId = books.id%s %s;";
+        if (modelName.matches("borrow::user-\\d+")) {
+            String userIdText = modelName.split("-")[1];
+            int userId = Integer.parseInt(userIdText);
 
-            if (filterValue.isEmpty()) {
-                return db.results(String.format(query, "", sortQuery));
-            } else {
-                return db.results(String.format(query, conditionalQuery, sortQuery), "%" + filterValue + "%");
-            }
-        } else {
-            if (filterValue.isEmpty()) {
-                return db.results(String.format(query, table, "", sortQuery));
-            } else {
-                return db.results(String.format(query, table, conditionalQuery, sortQuery), "%" + filterValue + "%");
-            }
+            modelName = "borrow";
+            conditionalQuery += " AND userId = " + userId;
         }
+
+        String query;
+        switch (modelName) {
+            case "book":
+                query = BOOK_SELECT_QUERY;
+                break;
+            case "user":
+                query = USER_SELECT_QUERY;
+                break;
+            case "borrow":
+                query = BORROW_SELECT_QUERY;
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + modelName);
+        }
+
+        query += "%s %s";
+        return db.results(String.format(query, conditionalQuery, sortQuery), "%" + filterValue + "%");
     }
 
     /**
@@ -81,7 +99,7 @@ public class ModelHelper {
             return null;
         }
 
-        try (Results res = db.results("SELECT * FROM users WHERE name = ?;", name)) {
+        try (Results res = db.results(USER_SELECT_QUERY + " WHERE name = ?;", name)) {
             ResultSet rs = res.getResultSet();
             if (rs.next()) {
                 return new User(
@@ -99,15 +117,41 @@ public class ModelHelper {
     }
 
     /**
+     * Tries to find a borrow object within the database
+     *
+     * @param id the borrow object ID
+     * @return the borrowed object if exists, null is otherwise
+     */
+    public Borrow findBorrowedBook(int id) {
+        try (Results res = db.results(BORROW_SELECT_QUERY + " WHERE borrows.id = ?", id)) {
+            ResultSet rs = res.getResultSet();
+            if (rs.next()) {
+                return new Borrow(
+                        rs.getInt("id"),
+                        rs.getInt("userId"),
+                        rs.getInt("bookId"),
+                        rs.getDate("borrowDate"),
+                        rs.getDate("dueDate"),
+                        rs.getString("username"),
+                        rs.getString("title")
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
      * Determines if a book is already registered to the DB.
      * A book is determined as already registered if both title and author is in the database.
      *
-     * @param title the book title
+     * @param title  the book title
      * @param author the book author
      * @return true if book is already registered, false is otherwise
      */
     public boolean doesBookExists(String title, String author) {
-        try (Results res = db.results("SELECT * FROM books WHERE title = ? AND author = ?;", title, author)) {
+        try (Results res = db.results(BOOK_SELECT_QUERY + " WHERE title = ? AND author = ?;", title, author)) {
             ResultSet rs = res.getResultSet();
             return rs.next();
         } catch (Exception e) {
@@ -124,7 +168,7 @@ public class ModelHelper {
      * @return true if the user already borrowed the book, false is otherwise
      */
     public boolean isBookBorrowed(int userId, int bookId) {
-        try (Results res = db.results("SELECT * FROM borrows WHERE userId = ? AND bookId = ?;", userId, bookId)) {
+        try (Results res = db.results(BORROW_SELECT_QUERY + " WHERE borrows.userId = ? AND borrows.bookId = ?;", userId, bookId)) {
             ResultSet rs = res.getResultSet();
             return rs.next();
         } catch (Exception e) {
@@ -139,7 +183,7 @@ public class ModelHelper {
         List<User> users = new ArrayList<>();
         String sortQuery = sort.makeQuery(column);
 
-        try (Results res = this.wrappedResults("users", sortQuery, column, filter)) {
+        try (Results res = this.wrappedResults("user", sortQuery, column, filter)) {
             ResultSet rs = res.getResultSet();
             while (rs.next()) {
                 User user = new User(
@@ -162,7 +206,7 @@ public class ModelHelper {
         List<Book> books = new ArrayList<>();
         String sortQuery = sort.makeQuery(column);
 
-        try (Results res = this.wrappedResults("books", sortQuery, column, filter)) {
+        try (Results res = this.wrappedResults("book", sortQuery, column, filter)) {
             ResultSet rs = res.getResultSet();
             while (rs.next()) {
                 Book book = new Book(rs.getInt("id"),
@@ -184,7 +228,39 @@ public class ModelHelper {
         List<Borrow> borrows = new ArrayList<>();
         String sortQuery = sort.makeQuery(column);
 
-        try (Results results = this.wrappedResults("borrows", sortQuery, column, filter)) {
+        try (Results results = this.wrappedResults("borrow", sortQuery, column, filter)) {
+            ResultSet rs = results.getResultSet();
+            while (rs.next()) {
+                Borrow borrow = new Borrow(
+                        rs.getInt("id"),
+                        rs.getInt("userId"),
+                        rs.getInt("bookId"),
+                        rs.getDate("borrowDate"),
+                        rs.getDate("dueDate"),
+                        rs.getString("username"),
+                        rs.getString("title")
+                );
+
+                borrows.add(borrow);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return borrows;
+    }
+
+    /**
+     * The difference between this and {@link #getAllBorrowed}, this one is for user specific.
+     * In the {@link #getAllBorrowed} you can get all borrow objects, but not for a specific user.
+     */
+    public List<Borrow> getAllBorrowedUser(SortType sort, String column, String filter, User user) {
+        List<Borrow> borrows = new ArrayList<>();
+
+        String sortQuery = sort.makeQuery(column);
+        String tableQuery = "borrow::user-" + user.getId();
+
+        try (Results results = this.wrappedResults(tableQuery, sortQuery, column, filter)) {
             ResultSet rs = results.getResultSet();
             while (rs.next()) {
                 Borrow borrow = new Borrow(

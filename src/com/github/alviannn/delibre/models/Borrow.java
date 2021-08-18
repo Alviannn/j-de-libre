@@ -49,15 +49,15 @@ public class Borrow {
     }
 
     public enum Field {
-        ID("ID", "id", false),
-        USER_ID("User ID", "userId", false),
-        BOOK_ID("Book ID", "bookId", false),
+        ID("ID", "borrows.id", false),
+        USER_ID("User ID", "borrows.userId", false),
+        BOOK_ID("Book ID", "borrows.bookId", false),
 
-        BORROW_DATE("Borrow Date", "borrowDate", false),
-        DUE_DATE("Due Date", "dueDate", false),
+        BORROW_DATE("Borrow Date", "borrows.borrowDate", false),
+        DUE_DATE("Due Date", "borrows.dueDate", false),
 
-        USERNAME("Username", "user.name", true),
-        BOOK_TITLE("Book Title", "book.title", true);
+        USERNAME("Username", "users.name", true),
+        BOOK_TITLE("Book Title", "books.title", true);
 
         private final String name, column;
         private final boolean searchable;

@@ -66,7 +66,14 @@ public abstract class AbstractHomeController extends AbstractController {
                 model = new DefaultTableModel(Borrow.Field.getFieldNames(), 0);
                 String column = Borrow.Field.fromName(categoryItem).getColumn();
 
-                List<Borrow> borrows = helper.getAllBorrowed(currentSort, column, view.searchField.getText());
+                List<Borrow> borrows;
+                User user = main.getCurrentUser();
+
+                if (user.isAdmin()) {
+                    borrows = helper.getAllBorrowed(currentSort, column, view.searchField.getText());
+                } else {
+                    borrows = helper.getAllBorrowedUser(currentSort, column, view.searchField.getText(), user);
+                }
 
                 for (Borrow borrow : borrows) {
                     model.addRow(new Object[]{
