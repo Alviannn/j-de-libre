@@ -3,6 +3,7 @@ package com.github.alviannn.delibre.controllers;
 import com.github.alviannn.delibre.Main;
 import com.github.alviannn.delibre.abstracts.AbstractHomeController;
 import com.github.alviannn.delibre.abstracts.AbstractHomeView;
+import com.github.alviannn.delibre.models.Borrow;
 import com.github.alviannn.delibre.models.User;
 import com.github.alviannn.delibre.views.UserHomeView;
 import com.github.alviannn.delibre.views.user.UserBookSection;
@@ -20,6 +21,8 @@ public class UserHomeController extends AbstractHomeController {
 
     @Override
     public void showView() {
+        ModelHelper helper = main.getModelHelper();
+
         UserHomeView view = new UserHomeView();
         view.setVisible(true);
 
@@ -69,7 +72,6 @@ public class UserHomeController extends AbstractHomeController {
 
         view.bookSection.borrowBtn.addActionListener(e -> {
             User user = main.getCurrentUser();
-            ModelHelper helper = main.getModelHelper();
 
             String idText = view.bookSection.idField.getText();
             String title = "Borrowing Book";
@@ -87,6 +89,26 @@ public class UserHomeController extends AbstractHomeController {
 
             helper.borrowBook(user.getId(), bookId);
             JOptionPane.showMessageDialog(view, "Successfully borrowed a new book!", title, JOptionPane.PLAIN_MESSAGE);
+        });
+
+        view.borrowedSection.returnBtn.addActionListener(e -> {
+            UserBorrowedSection section = view.borrowedSection;
+
+            String title = "Returning Borrowed Book";
+            String idText = section.idField.getText();
+
+            if (idText.isEmpty()) {
+                JOptionPane.showMessageDialog(view, "No data was selected!", title, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            int id = Integer.parseInt(idText);
+
+            Borrow borrow = helper.findBorrowedBook(id);
+            helper.removeBorrowedBook(id);
+
+            JOptionPane.showMessageDialog(view, "Successfully returned the borrowed book!");
+            // todo: show receipt
         });
 
         this.refreshTable(view);
