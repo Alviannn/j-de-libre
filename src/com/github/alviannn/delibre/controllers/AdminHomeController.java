@@ -35,6 +35,9 @@ public class AdminHomeController extends AbstractHomeController {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int row = table.getSelectedRow();
+                if (row == -1) {
+                    return;
+                }
 
                 switch (view.currentSection) {
                     case AbstractHomeView.BOOK: {

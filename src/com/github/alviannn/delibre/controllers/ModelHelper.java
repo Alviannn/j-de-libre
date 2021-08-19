@@ -349,7 +349,7 @@ public class ModelHelper {
 
     public void removeBorrowedBook(int id) {
         try {
-            db.query("DELETE FROM borrowed WHERE id = ?;", id);
+            db.query("DELETE FROM borrows WHERE id = ?;", id);
         } catch (Exception e) {
             e.printStackTrace();
         }

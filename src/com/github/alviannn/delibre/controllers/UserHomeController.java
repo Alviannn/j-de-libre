@@ -12,8 +12,12 @@ import com.github.alviannn.delibre.views.user.UserBorrowedSection;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.NumberFormat;
+import java.util.concurrent.TimeUnit;
 
 public class UserHomeController extends AbstractHomeController {
+
+    private final long BOOK_FINE = 5_000L;
 
     public UserHomeController(Main main) {
         super(main);
@@ -34,6 +38,9 @@ public class UserHomeController extends AbstractHomeController {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int row = table.getSelectedRow();
+                if (row == -1) {
+                    return;
+                }
 
                 switch (view.currentSection) {
                     case AbstractHomeView.BOOK: {
@@ -89,6 +96,7 @@ public class UserHomeController extends AbstractHomeController {
 
             helper.borrowBook(user.getId(), bookId);
             JOptionPane.showMessageDialog(view, "Successfully borrowed a new book!", title, JOptionPane.PLAIN_MESSAGE);
+            view.clearSelection();
         });
 
         view.borrowedSection.returnBtn.addActionListener(e -> {
@@ -107,8 +115,28 @@ public class UserHomeController extends AbstractHomeController {
             Borrow borrow = helper.findBorrowedBook(id);
             helper.removeBorrowedBook(id);
 
-            JOptionPane.showMessageDialog(view, "Successfully returned the borrowed book!");
-            // todo: show receipt
+            long currentMillis = System.currentTimeMillis();
+            long dueMillis = borrow.getDueDate().getTime();
+
+            long diffMillis = currentMillis - dueMillis;
+            long diffDays = TimeUnit.MILLISECONDS.toDays(diffMillis);
+
+            long totalFine;
+            if (diffDays > 0) {
+                totalFine = BOOK_FINE * diffDays;
+            } else {
+                totalFine = 0;
+            }
+
+            JOptionPane.showMessageDialog(view,
+                    "ID: " + borrow.getBookId() + "\n" +
+                    "Book Title: " + borrow.getBookTitle() + "\n" +
+                    "Username: " + borrow.getUsername() + "\n" +
+                    "Fine: Rp " + NumberFormat.getInstance().format(totalFine),
+                    title, JOptionPane.INFORMATION_MESSAGE);
+
+            view.clearSelection();
+            this.refreshTable(view);
         });
 
         this.refreshTable(view);
